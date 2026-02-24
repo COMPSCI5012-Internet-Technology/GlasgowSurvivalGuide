@@ -1,0 +1,13 @@
+# GlasgowSurvivalGuide - Conda environment (pinned stable versions)
+# Create env: conda env create -f environment.yml
+# Activate: conda activate GlasgowSurvivalGuide
+
+name: GlasgowSurvivalGuide
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12.8
+  - django=5.2.12
+  - pillow=10.4.0
+  - pip=24.3.2

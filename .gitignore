@@ -1,0 +1,32 @@
+# Per ITECH EnvSetup document
+db.sqlite3
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Conda
+.conda/
+*.conda
+
+# Virtual environments
+.env
+.venv
+venv/
+env/
+
+# IDE / editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Static and media (adjust as needed)
+/media/
+/staticfiles/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
