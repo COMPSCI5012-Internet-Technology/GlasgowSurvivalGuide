@@ -1,0 +1,39 @@
+{% extends 'guide/auth_base.html' %}
+{% block title %}Register – Glasgow Survival Guide{% endblock %}
+{% block auth_tabs %}
+  <a href="{% url 'guide:login' %}" class="auth-tab inactive">Login</a>
+  <h1 class="auth-tab active" style="margin:0;flex:1;font-size:16px;font-weight:600;">Register</h1>
+{% endblock %}
+{% block card_content %}
+  <form method="post" action="{% url 'guide:register' %}">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <ul class="errorlist">{{ form.non_field_errors }}</ul>
+    {% endif %}
+    <div class="field">
+      <label for="id_email">UofG Email</label>
+      <p id="email-hint" class="hint">Please use your @gla.ac.uk address</p>
+      <input type="email" name="email" id="id_email" value="{{ form.email.value|default:'' }}" placeholder="email@gla.ac.uk" aria-describedby="email-hint" autocomplete="email" required>
+      {% if form.email.errors %}
+        <ul class="errorlist">{{ form.email.errors }}</ul>
+      {% endif %}
+    </div>
+    <div class="field">
+      <label for="id_password1">Password</label>
+      <input type="password" name="password1" id="id_password1" autocomplete="new-password" required>
+      {% if form.password1.errors %}
+        <ul class="errorlist">{{ form.password1.errors }}</ul>
+      {% endif %}
+    </div>
+    <div class="field">
+      <label for="id_password2">Confirm password</label>
+      <input type="password" name="password2" id="id_password2" autocomplete="new-password" required>
+      {% if form.password2.errors %}
+        <ul class="errorlist">{{ form.password2.errors }}</ul>
+      {% endif %}
+    </div>
+    <div class="field">
+      <button type="submit" class="btn-submit">Register</button>
+    </div>
+  </form>
+{% endblock %}
