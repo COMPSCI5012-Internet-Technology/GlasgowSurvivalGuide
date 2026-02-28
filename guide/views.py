@@ -3,8 +3,7 @@ from django.http import HttpResponse
 
 
 def index(request):
-    """Placeholder index view; replace with data-driven view when models and templates are added."""
-    return HttpResponse("Glasgow Survival Guide – index.")
+    return render(request, 'guide/index.html')
 
 
 def about(request):

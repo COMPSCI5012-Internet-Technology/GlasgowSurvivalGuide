@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Glasgow Survival Guide</h1>
+{% if user.is_authenticated %}
+  <p>You are logged in as {{ user.email }}.</p>
+  <form method="post" action="{% url 'guide:logout' %}">
+    {% csrf_token %}
+    <button type="submit">Log out</button>
+  </form>
+  <p><a href="{% url 'guide:about' %}">About</a></p>
+{% else %}
+  <p><a href="{% url 'guide:login' %}">Log in</a> | <a href="{% url 'guide:register' %}">Register</a></p>
+{% endif %}
+{% endblock %}
