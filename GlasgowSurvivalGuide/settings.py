@@ -115,9 +115,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR]
 
-# Auth redirects (set app URL names when you add login/register views)
-# LOGIN_URL = 'guide:login'
-# LOGIN_REDIRECT_URL = 'guide:index'
+LOGIN_URL = 'guide:login'
+LOGIN_REDIRECT_URL = '/admin/'
+LOGOUT_REDIRECT_URL = 'guide:index'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
