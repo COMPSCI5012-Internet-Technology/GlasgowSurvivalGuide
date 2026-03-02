@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Posts – Glasgow Survival Guide{% endblock %}
+{% block content %}
+<h1>Posts</h1>
+{% if post_list %}
+<ul>
+  {% for post in post_list %}
+  <li>{{ post.title }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No posts yet.</p>
+{% endif %}
+{% endblock %}
