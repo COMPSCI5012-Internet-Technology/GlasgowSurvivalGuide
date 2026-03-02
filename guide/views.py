@@ -1,9 +1,9 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 
-from guide.forms import EmailLoginForm, RegisterForm
+from guide.forms import EmailLoginForm, PostForm, RegisterForm
 from guide.models import Post
 
 
@@ -51,3 +51,22 @@ def login_view(request):
 def post_list(request):
     post_list_qs = Post.objects.filter(status=True).order_by('-created_at')
     return render(request, 'guide/post_list.html', {'post_list': post_list_qs})
+
+
+@login_required
+def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('guide:post_detail', pk=post.pk)
+    else:
+        form = PostForm()
+    return render(request, 'guide/post_form.html', {'form': form})
+
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    return render(request, 'guide/post_detail.html', {'post': post})
