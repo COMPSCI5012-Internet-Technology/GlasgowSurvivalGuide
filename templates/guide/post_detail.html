@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.title }} – Glasgow Survival Guide{% endblock %}
+{% block content %}
+<article>
+  <h1>{{ post.title }}</h1>
+  <p>By {{ post.author.email|default:post.author.username }} · {{ post.created_at|date:"SHORT_DATETIME_FORMAT" }}</p>
+  {% if post.address %}<p>Location: {{ post.address }}</p>{% endif %}
+  {% if post.rating %}<p>Rating: {{ post.rating }}/5</p>{% endif %}
+  {% if post.category %}<p>Category: {{ post.category.name }}</p>{% endif %}
+  {% if post.image %}
+    <p><img src="{{ post.image.url }}" alt="{{ post.title }}"></p>
+  {% endif %}
+  <div>{{ post.description|linebreaks }}</div>
+</article>
+<p><a href="{% url 'guide:post_list' %}">Back to posts</a></p>
+{% endblock %}
