@@ -1,7 +1,8 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponse
 
 from guide.forms import EmailLoginForm, PostForm, RegisterForm
 from guide.models import Post
@@ -49,7 +50,12 @@ def login_view(request):
 
 
 def post_list(request):
-    post_list_qs = Post.objects.filter(status=True).order_by('-created_at')
+    if request.user.is_authenticated:
+        post_list_qs = Post.objects.filter(
+            Q(status=True) | Q(author=request.user)
+        ).order_by('-created_at')
+    else:
+        post_list_qs = Post.objects.filter(status=True).order_by('-created_at')
     return render(request, 'guide/post_list.html', {'post_list': post_list_qs})
 
 
@@ -69,4 +75,8 @@ def post_create(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    if not post.status and (
+        not request.user.is_authenticated or request.user != post.author
+    ):
+        raise Http404
     return render(request, 'guide/post_detail.html', {'post': post})
