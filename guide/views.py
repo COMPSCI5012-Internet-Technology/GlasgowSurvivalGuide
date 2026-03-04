@@ -57,7 +57,7 @@ def post_list(request):
         post_list_qs = Post.objects.filter(status=True).order_by('-created_at')
     return render(request, 'guide/post_list.html', {'post_list': post_list_qs})
 
-
+# Add this decorator so guests are forced to login if they try to post
 @login_required
 def post_create(request):
     if request.method == 'POST':
