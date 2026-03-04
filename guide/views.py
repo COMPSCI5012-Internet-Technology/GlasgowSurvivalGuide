@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Post
-from .forms import PostForm
+from django.db.models import Q
 
 from guide.forms import EmailLoginForm, RegisterForm
 
