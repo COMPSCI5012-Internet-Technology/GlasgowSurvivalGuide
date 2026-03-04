@@ -58,3 +58,13 @@ def post_list(request):
     return render(request, 'guide/post_list.html', {'post_list': post_list_qs})
 
 
+
+
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if not post.status and (
+        not request.user.is_authenticated or request.user != post.author
+    ):
+        raise Http404
+    return render(request, 'guide/post_detail.html', {'post': post})
