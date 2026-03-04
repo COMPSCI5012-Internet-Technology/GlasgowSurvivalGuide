@@ -2,6 +2,8 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
+from .models import Post
+from .forms import PostForm
 
 from guide.forms import EmailLoginForm, RegisterForm
 
@@ -45,3 +47,14 @@ def login_view(request):
     else:
         form = EmailLoginForm()
     return render(request, 'guide/login.html', {'form': form, 'next': next_url})
+
+def post_list(request):
+    if request.user.is_authenticated:
+        post_list_qs = Post.objects.filter(
+            Q(status=True) | Q(author=request.user)
+        ).order_by('-created_at')
+    else:
+        post_list_qs = Post.objects.filter(status=True).order_by('-created_at')
+    return render(request, 'guide/post_list.html', {'post_list': post_list_qs})
+
+
