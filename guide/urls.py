@@ -10,4 +10,8 @@ urlpatterns = [
     path('accounts/register/', views.register, name='register'),
     path('accounts/login/', views.login_view, name='login'),
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
+    
+    path('posts/', views.post_list, name='post_list'),
+    path('posts/new/', views.post_create, name='post_create'),
+    path('posts/<int:pk>/', views.post_detail, name='post_detail'),
 ]
