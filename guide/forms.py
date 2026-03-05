@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
-
+from guide.models import Post
 User = get_user_model()
 
 
@@ -81,3 +81,32 @@ class EmailLoginForm(forms.Form):
             raise forms.ValidationError('Invalid email or password.')
         cleaned_data['user'] = user
         return cleaned_data
+
+    # This is the form that people will see when they create post 
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = (
+            "title",
+            "description",
+            "address",
+            "rating",
+            "category",
+            "image",
+            "status",
+        )
+        widgets = {
+            "title": forms.TextInput(attrs={"placeholder": "Enter post title"}),
+            "description": forms.Textarea(
+                attrs={
+                    "placeholder": "Write a description for your post...",
+                    "rows": 5,
+                }
+            ),
+            "address": forms.TextInput(attrs={"placeholder": "Search location..."}),
+            "rating": forms.NumberInput(attrs={"min": 0, "max": 5}),
+        }
+        labels = {
+            "address": "Location",
+            "status": "Public (visible to everyone)",
+        }
