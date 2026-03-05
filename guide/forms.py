@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
-from guide.models import Post
+
+from guide.models import Comment, Post
+
 User = get_user_model()
 
 
@@ -82,7 +84,7 @@ class EmailLoginForm(forms.Form):
         cleaned_data['user'] = user
         return cleaned_data
 
-    # This is the form that people will see when they create post 
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -109,4 +111,13 @@ class PostForm(forms.ModelForm):
         labels = {
             "address": "Location",
             "status": "Public (visible to everyone)",
+        }
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ("content", "image")
+        widgets = {
+            "content": forms.Textarea(attrs={"placeholder": "Write a comment...", "rows": 3}),
         }

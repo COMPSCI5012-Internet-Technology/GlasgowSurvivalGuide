@@ -12,5 +12,44 @@
   {% endif %}
   <div>{{ post.description|linebreaks }}</div>
 </article>
+
+<section aria-label="Comments">
+  <h2>Comments</h2>
+  {% if comment_list %}
+  <ul>
+    {% for comment in comment_list %}
+    <li>
+      <p>{{ comment.content|linebreaks }}</p>
+      <p><small>By {{ comment.author.email|default:comment.author.username }} · {{ comment.created_at|date:"SHORT_DATETIME_FORMAT" }}</small></p>
+      {% if comment.image %}
+      <p><img src="{{ comment.image.url }}" alt="Comment image"></p>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No comments yet.</p>
+  {% endif %}
+
+  {% if user.is_authenticated %}
+  <h3>Add a comment</h3>
+  <form method="post" action="{% url 'guide:post_detail' pk=post.pk %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="comment_form" value="1">
+    {% if comment_form.non_field_errors %}
+    <ul class="errorlist">{{ comment_form.non_field_errors }}</ul>
+    {% endif %}
+    {% for field in comment_form %}
+    <div class="field">
+      <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}*{% endif %}</label>
+      {{ field }}
+      {% if field.errors %}<ul class="errorlist">{{ field.errors }}</ul>{% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit">Submit comment</button>
+  </form>
+  {% endif %}
+</section>
+
 <p><a href="{% url 'guide:post_list' %}">Back to posts</a></p>
 {% endblock %}

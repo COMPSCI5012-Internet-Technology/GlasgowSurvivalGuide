@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+
 User = get_user_model()
 
-# post category, can have main category(life or school)and sub category(resturant or different colleges)
+
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
     main = models.CharField(max_length=64)
@@ -13,7 +14,7 @@ class Category(models.Model):
     def __str__(self) -> str:
         return self.name
 
-# post details. 
+
 class Post(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField(max_length=300)
@@ -51,3 +52,24 @@ class Post(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+
+class Comment(models.Model):
+    content = models.TextField()
+    image = models.ImageField(upload_to="comment_images/", blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
+
+    def __str__(self) -> str:
+        return f"Comment on {self.post.title} by {self.author}"
+

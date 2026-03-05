@@ -1,11 +1,11 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
-from django.http import HttpResponse
-from .models import Post
 from django.db.models import Q
-from .forms import PostForm
-from guide.forms import EmailLoginForm, RegisterForm
+from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+
+from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm
+from guide.models import Post
 
 
 def index(request):
@@ -48,6 +48,7 @@ def login_view(request):
         form = EmailLoginForm()
     return render(request, 'guide/login.html', {'form': form, 'next': next_url})
 
+
 def post_list(request):
     if request.user.is_authenticated:
         post_list_qs = Post.objects.filter(
@@ -57,7 +58,7 @@ def post_list(request):
         post_list_qs = Post.objects.filter(status=True).order_by('-created_at')
     return render(request, 'guide/post_list.html', {'post_list': post_list_qs})
 
-# Add this decorator so guests are forced to login if they try to post
+
 @login_required
 def post_create(request):
     if request.method == 'POST':
@@ -78,4 +79,24 @@ def post_detail(request, pk):
         not request.user.is_authenticated or request.user != post.author
     ):
         raise Http404
-    return render(request, 'guide/post_detail.html', {'post': post})
+    comment_list = post.comments.all().order_by('created_at')
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        if request.POST.get('comment_form'):
+            form = CommentForm(request.POST, request.FILES)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.post = post
+                comment.author = request.user
+                comment.save()
+                return redirect('guide:post_detail', pk=post.pk)
+        else:
+            form = CommentForm()
+    else:
+        form = CommentForm()
+
+    return render(
+        request,
+        'guide/post_detail.html',
+        {'post': post, 'comment_list': comment_list, 'comment_form': form},
+    )
