@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Post
 from django.db.models import Q
-
+from .forms import PostForm
 from guide.forms import EmailLoginForm, RegisterForm
 
 
