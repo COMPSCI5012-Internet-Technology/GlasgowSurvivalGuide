@@ -10,6 +10,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         items = get_news_for_daily_fetch(limit=5)
+        if not items:
+            self.stdout.write(
+                self.style.WARNING("No news items fetched; existing data kept.")
+            )
+            return
         News.objects.all().delete()
         created = 0
         for item in items:
