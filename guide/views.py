@@ -128,8 +128,50 @@ def post_detail(request, pk):
     else:
         form = CommentForm()
 
+    is_liked = False
+    is_saved = False
+    if request.user.is_authenticated:
+        is_liked = post.liked_by.filter(pk=request.user.pk).exists()
+        is_saved = post.saved_by.filter(pk=request.user.pk).exists()
+
     return render(
         request,
         'guide/post_detail.html',
-        {'post': post, 'comment_list': comment_list, 'comment_form': form},
+        {
+            'post': post,
+            'comment_list': comment_list,
+            'comment_form': form,
+            'is_liked': is_liked,
+            'is_saved': is_saved,
+        },
     )
+
+
+@login_required
+def post_like(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if not post.status and request.user != post.author:
+        raise Http404
+    if post.liked_by.filter(pk=request.user.pk).exists():
+        post.liked_by.remove(request.user)
+    else:
+        post.liked_by.add(request.user)
+    next_url = request.GET.get('next') or request.POST.get('next')
+    if next_url:
+        return redirect(next_url)
+    return redirect('guide:post_detail', pk=post.pk)
+
+
+@login_required
+def post_save(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if not post.status and request.user != post.author:
+        raise Http404
+    if post.saved_by.filter(pk=request.user.pk).exists():
+        post.saved_by.remove(request.user)
+    else:
+        post.saved_by.add(request.user)
+    next_url = request.GET.get('next') or request.POST.get('next')
+    if next_url:
+        return redirect(next_url)
+    return redirect('guide:post_detail', pk=post.pk)

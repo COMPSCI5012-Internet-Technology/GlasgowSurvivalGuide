@@ -12,5 +12,7 @@ urlpatterns = [
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
     path('posts/', views.post_list, name='post_list'),
     path('posts/new/', views.post_create, name='post_create'),
+    path('posts/<int:pk>/like/', views.post_like, name='post_like'),
+    path('posts/<int:pk>/save/', views.post_save, name='post_save'),
     path('posts/<int:pk>/', views.post_detail, name='post_detail'),
 ]

@@ -13,6 +13,21 @@
   <div>{{ post.description|linebreaks }}</div>
 </article>
 
+{% if user.is_authenticated %}
+<section aria-label="Like and save">
+  <form method="post" action="{% url 'guide:post_like' pk=post.pk %}" style="display: inline;">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <button type="submit">{% if is_liked %}Liked{% else %}Like{% endif %}</button>
+  </form>
+  <form method="post" action="{% url 'guide:post_save' pk=post.pk %}" style="display: inline;">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <button type="submit">{% if is_saved %}Saved{% else %}Save{% endif %}</button>
+  </form>
+</section>
+{% endif %}
+
 <section aria-label="Comments">
   <h2>Comments</h2>
   {% if comment_list %}
