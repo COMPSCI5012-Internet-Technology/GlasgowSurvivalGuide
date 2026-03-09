@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}{{ collection.name }} – Glasgow Survival Guide{% endblock %}
+{% block content %}
+<h1>{{ collection.name }}</h1>
+<p><a href="{% url 'guide:collection_list' %}">Back to collections</a></p>
+{% if posts_in_collection %}
+<ul>
+  {% for post in posts_in_collection %}
+  <li>
+    <a href="{% url 'guide:post_detail' pk=post.pk %}">{{ post.title }}</a>
+    <form method="post" action="{% url 'guide:collection_remove' collection_pk=collection.pk post_pk=post.pk %}" style="display: inline;">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <button type="submit">Remove from list</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No posts in this collection.</p>
+{% endif %}
+{% endblock %}

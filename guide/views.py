@@ -138,9 +138,15 @@ def post_detail(request, pk):
 
     is_liked = False
     is_saved = False
+    user_collections = []
+    collection_ids_containing_post = set()
     if request.user.is_authenticated:
         is_liked = post.liked_by.filter(pk=request.user.pk).exists()
         is_saved = post.saved_by.filter(pk=request.user.pk).exists()
+        user_collections = request.user.collections.all().order_by('name')
+        collection_ids_containing_post = set(
+            post.in_collections.filter(owner=request.user).values_list('pk', flat=True)
+        )
 
     return render(
         request,
@@ -151,6 +157,8 @@ def post_detail(request, pk):
             'comment_form': form,
             'is_liked': is_liked,
             'is_saved': is_saved,
+            'user_collections': user_collections,
+            'collection_ids_containing_post': collection_ids_containing_post,
         },
     )
 
@@ -205,6 +213,45 @@ def collection_create(request):
     else:
         form = CollectionCreateForm(user=request.user)
     return render(request, 'guide/collection_form.html', {'form': form})
+
+
+@login_required
+def collection_detail(request, pk):
+    collection = get_object_or_404(CollectionList, pk=pk)
+    if collection.owner != request.user:
+        raise Http404
+    posts_in_collection = collection.posts.all().order_by('-created_at')
+    return render(
+        request,
+        'guide/collection_detail.html',
+        {'collection': collection, 'posts_in_collection': posts_in_collection},
+    )
+
+
+@login_required
+def collection_add(request, collection_pk, post_pk):
+    collection = get_object_or_404(CollectionList, pk=collection_pk)
+    post = get_object_or_404(Post, pk=post_pk)
+    if collection.owner != request.user:
+        raise Http404
+    collection.posts.add(post)
+    next_url = request.GET.get('next') or request.POST.get('next')
+    if next_url:
+        return redirect(next_url)
+    return redirect('guide:post_detail', pk=post.pk)
+
+
+@login_required
+def collection_remove(request, collection_pk, post_pk):
+    collection = get_object_or_404(CollectionList, pk=collection_pk)
+    post = get_object_or_404(Post, pk=post_pk)
+    if collection.owner != request.user:
+        raise Http404
+    collection.posts.remove(post)
+    next_url = request.GET.get('next') or request.POST.get('next')
+    if next_url:
+        return redirect(next_url)
+    return redirect('guide:collection_detail', pk=collection.pk)
 
 
 @login_required

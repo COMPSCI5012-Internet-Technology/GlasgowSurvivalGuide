@@ -17,5 +17,8 @@ urlpatterns = [
     path('posts/<int:pk>/', views.post_detail, name='post_detail'),
     path('collections/', views.collection_list, name='collection_list'),
     path('collections/new/', views.collection_create, name='collection_create'),
+    path('collections/<int:collection_pk>/add/<int:post_pk>/', views.collection_add, name='collection_add'),
+    path('collections/<int:collection_pk>/remove/<int:post_pk>/', views.collection_remove, name='collection_remove'),
     path('collections/<int:pk>/delete/', views.collection_delete, name='collection_delete'),
+    path('collections/<int:pk>/', views.collection_detail, name='collection_detail'),
 ]

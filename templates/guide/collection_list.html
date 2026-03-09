@@ -7,7 +7,7 @@
 <ul>
   {% for col in collections %}
   <li>
-    {{ col.name }}
+    <a href="{% url 'guide:collection_detail' pk=col.pk %}">{{ col.name }}</a>
     <form method="post" action="{% url 'guide:collection_delete' pk=col.pk %}" style="display: inline;">
       {% csrf_token %}
       <button type="submit">Delete</button>

@@ -31,6 +31,23 @@
 </section>
 {% endif %}
 
+{% if user.is_authenticated and user_collections %}
+<section aria-label="Add to collection">
+  <h2>Add to collection</h2>
+  {% for col in user_collections %}
+  {% if col.pk in collection_ids_containing_post %}
+  <p>{{ col.name }} (already in this collection)</p>
+  {% else %}
+  <form method="post" action="{% url 'guide:collection_add' collection_pk=col.pk post_pk=post.pk %}" style="display: inline;">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <button type="submit">Add to {{ col.name }}</button>
+  </form>
+  {% endif %}
+  {% endfor %}
+</section>
+{% endif %}
+
 <section aria-label="Comments">
   <h2>Comments</h2>
   {% if comment_list %}
