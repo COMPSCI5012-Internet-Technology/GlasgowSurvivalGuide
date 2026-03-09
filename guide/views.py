@@ -5,7 +5,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm
-from guide.models import Category, CollectionList, Post
+from guide.models import Category, CollectionList, News, Post
 
 from guide.forms import (
     CollectionCreateForm,
@@ -17,6 +17,11 @@ from guide.forms import (
 
 def index(request):
     return render(request, 'guide/index.html')
+
+
+def news_list(request):
+    news_items = News.objects.all().order_by("-time")
+    return render(request, "guide/news_list.html", {"news_list": news_items})
 
 
 @login_required

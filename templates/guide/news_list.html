@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}News – Glasgow Survival Guide{% endblock %}
+{% block content %}
+<h1>News</h1>
+{% if news_list %}
+<ul>
+  {% for item in news_list %}
+  <li>
+    <a href="{{ item.link }}" target="_blank" rel="noopener noreferrer">{{ item.title }}</a>
+    <time datetime="{{ item.time|date:'c' }}">{{ item.time|date:"Y-m-d H:i" }}</time>
+    {% if item.content %}<p>{{ item.content }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No news yet.</p>
+{% endif %}
+{% endblock %}

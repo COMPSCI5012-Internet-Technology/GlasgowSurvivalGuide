@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from guide.models import Category, CollectionList, Comment, Post, Tag
+from guide.models import Category, CollectionList, Comment, News, Post, Tag
 
 
 @admin.register(Category)
@@ -36,3 +36,10 @@ class CollectionListAdmin(admin.ModelAdmin):
     list_filter = ("status",)
     search_fields = ("name",)
     filter_horizontal = ("posts",)
+
+
+@admin.register(News)
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ("title", "time")
+    list_filter = ("time",)
+    search_fields = ("title", "content",)

@@ -107,3 +107,13 @@ class CollectionList(models.Model):
     def __str__(self) -> str:
         return f"{self.owner.username} – {self.name}"
 
+
+class News(models.Model):
+    title = models.TextField()
+    content = models.TextField(blank=True, default="")
+    link = models.URLField()
+    time = models.DateTimeField()
+
+    def __str__(self) -> str:
+        return self.title[:50] if len(self.title) > 50 else self.title
+
