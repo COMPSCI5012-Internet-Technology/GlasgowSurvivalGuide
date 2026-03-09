@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}My Collections – Glasgow Survival Guide{% endblock %}
+{% block content %}
+<h1>My Collections</h1>
+<p><a href="{% url 'guide:collection_create' %}">New collection</a></p>
+{% if collections %}
+<ul>
+  {% for col in collections %}
+  <li>
+    {{ col.name }}
+    <form method="post" action="{% url 'guide:collection_delete' pk=col.pk %}" style="display: inline;">
+      {% csrf_token %}
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No collections yet.</p>
+{% endif %}
+<p><a href="{% url 'guide:post_list' %}">Back to posts</a></p>
+{% endblock %}

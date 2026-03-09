@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}New Collection – Glasgow Survival Guide{% endblock %}
+{% block content %}
+<h1>New Collection</h1>
+<form method="post" action="{% url 'guide:collection_create' %}">
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+  <ul class="errorlist">{{ form.non_field_errors }}</ul>
+  {% endif %}
+  {% for field in form %}
+  <div class="field">
+    <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}*{% endif %}</label>
+    {{ field }}
+    {% if field.help_text %}<p class="helptext">{{ field.help_text }}</p>{% endif %}
+    {% if field.errors %}<ul class="errorlist">{{ field.errors }}</ul>{% endif %}
+  </div>
+  {% endfor %}
+  <div class="field">
+    <button type="submit">Create</button>
+  </div>
+</form>
+<p><a href="{% url 'guide:collection_list' %}">Back to collections</a></p>
+{% endblock %}

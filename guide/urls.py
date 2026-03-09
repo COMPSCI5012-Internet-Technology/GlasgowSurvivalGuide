@@ -15,4 +15,7 @@ urlpatterns = [
     path('posts/<int:pk>/like/', views.post_like, name='post_like'),
     path('posts/<int:pk>/save/', views.post_save, name='post_save'),
     path('posts/<int:pk>/', views.post_detail, name='post_detail'),
+    path('collections/', views.collection_list, name='collection_list'),
+    path('collections/new/', views.collection_create, name='collection_create'),
+    path('collections/<int:pk>/delete/', views.collection_delete, name='collection_delete'),
 ]

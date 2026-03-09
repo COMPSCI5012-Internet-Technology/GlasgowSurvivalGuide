@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
 
-from guide.models import Comment, Post
+from guide.models import CollectionList, Comment, Post
 
 User = get_user_model()
 
@@ -122,3 +122,28 @@ class CommentForm(forms.ModelForm):
         widgets = {
             "content": forms.Textarea(attrs={"placeholder": "Write a comment...", "rows": 3}),
         }
+
+
+class CollectionCreateForm(forms.Form):
+    name = forms.CharField(
+        max_length=20,
+        label="Collection name",
+        widget=forms.TextInput(attrs={"placeholder": "e.g. Favorites"}),
+    )
+    status = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Open (visible to others)",
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def clean_name(self):
+        name = (self.cleaned_data.get("name") or "").strip()
+        if not name:
+            raise forms.ValidationError("Name is required.")
+        if self.user and CollectionList.objects.filter(owner=self.user, name=name).exists():
+            raise forms.ValidationError("You already have a collection with this name.")
+        return name

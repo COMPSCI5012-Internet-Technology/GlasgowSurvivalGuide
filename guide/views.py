@@ -5,8 +5,15 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm
-from guide.models import Post,Category
+from guide.models import Category, CollectionList, Post
 
+from guide.forms import (
+    CollectionCreateForm,
+    CommentForm,
+    EmailLoginForm,
+    PostForm,
+    RegisterForm,
+)
 
 def index(request):
     return render(request, 'guide/index.html')
@@ -176,3 +183,34 @@ def post_save(request, pk):
     if next_url:
         return redirect(next_url)
     return redirect('guide:post_detail', pk=post.pk)
+
+
+@login_required
+def collection_list(request):
+    collections = request.user.collections.all().order_by('name')
+    return render(request, 'guide/collection_list.html', {'collections': collections})
+
+
+@login_required
+def collection_create(request):
+    if request.method == 'POST':
+        form = CollectionCreateForm(request.POST, user=request.user)
+        if form.is_valid():
+            CollectionList.objects.create(
+                owner=request.user,
+                name=form.cleaned_data['name'].strip(),
+                status=form.cleaned_data['status'],
+            )
+            return redirect('guide:collection_list')
+    else:
+        form = CollectionCreateForm(user=request.user)
+    return render(request, 'guide/collection_form.html', {'form': form})
+
+
+@login_required
+def collection_delete(request, pk):
+    collection = get_object_or_404(CollectionList, pk=pk)
+    if collection.owner != request.user:
+        raise Http404
+    collection.delete()
+    return redirect('guide:collection_list')
