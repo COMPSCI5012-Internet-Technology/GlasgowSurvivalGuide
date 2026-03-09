@@ -94,6 +94,7 @@ class PostForm(forms.ModelForm):
             "address",
             "rating",
             "category",
+            "tags",
             "image",
             "status",
         )

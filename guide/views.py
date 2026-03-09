@@ -100,6 +100,7 @@ def post_create(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            form.save_m2m()
             return redirect('guide:post_detail', pk=post.pk)
     else:
         form = PostForm()
