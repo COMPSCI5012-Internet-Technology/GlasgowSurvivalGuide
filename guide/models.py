@@ -15,6 +15,13 @@ class Category(models.Model):
         return self.name
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=16, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Post(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField(max_length=300)
@@ -49,6 +56,11 @@ class Post(models.Model):
         related_name="saved_posts",
         blank=True,
     )
+    tags = models.ManyToManyField(
+        Tag,
+        related_name="posts",
+        blank=True,
+    )
 
     def __str__(self) -> str:
         return self.title
@@ -72,4 +84,26 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f"Comment on {self.post.title} by {self.author}"
+
+
+class CollectionList(models.Model):
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="collections",
+    )
+    name = models.CharField(max_length=20)
+    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    posts = models.ManyToManyField(
+        Post,
+        related_name="in_collections",
+        blank=True,
+    )
+
+    class Meta:
+        unique_together = [["owner", "name"]]
+
+    def __str__(self) -> str:
+        return f"{self.owner.username} – {self.name}"
 
