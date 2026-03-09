@@ -5,7 +5,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm
-from guide.models import Post
+from guide.models import Post,Category
 
 
 def index(request):
@@ -50,13 +50,46 @@ def login_view(request):
 
 
 def post_list(request):
+    q = request.GET.get('q', '').strip()
+    category_id = request.GET.get('category', '').strip()
+    sort = request.GET.get('sort', 'newest').strip()
+    if sort != 'oldest':
+        sort = 'newest'
+
     if request.user.is_authenticated:
         post_list_qs = Post.objects.filter(
             Q(status=True) | Q(author=request.user)
-        ).order_by('-created_at')
+        )
     else:
-        post_list_qs = Post.objects.filter(status=True).order_by('-created_at')
-    return render(request, 'guide/post_list.html', {'post_list': post_list_qs})
+        post_list_qs = Post.objects.filter(status=True)
+    if q:
+        post_list_qs = post_list_qs.filter(
+            Q(title__icontains=q) | Q(description__icontains=q)
+        )
+    if category_id and category_id.isdigit():
+        id_val = int(category_id)
+        if Category.objects.filter(pk=id_val).exists():
+            post_list_qs = post_list_qs.filter(category_id=id_val)
+        else:
+            category_id = ''
+
+    if sort == 'oldest':
+        post_list_qs = post_list_qs.order_by('created_at')
+    else:
+        post_list_qs = post_list_qs.order_by('-created_at')
+
+    categories = Category.objects.all().order_by('name')
+    return render(
+        request,
+        'guide/post_list.html',
+        {
+            'post_list': post_list_qs,
+            'q': q,
+            'categories': categories,
+            'category_id': category_id,
+            'sort': sort,
+        },
+    )
 
 
 @login_required

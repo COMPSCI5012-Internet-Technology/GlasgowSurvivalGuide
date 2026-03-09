@@ -2,6 +2,23 @@
 {% block title %}Posts – Glasgow Survival Guide{% endblock %}
 {% block content %}
 <h1>Posts</h1>
+<form method="get" action="{% url 'guide:post_list' %}">
+  <label for="id_q">Search</label>
+  <input type="text" name="q" id="id_q" value="{{ q }}" placeholder="Search posts...">
+  <label for="id_category">Category</label>
+  <select name="category" id="id_category">
+    <option value="">All categories</option>
+    {% for cat in categories %}
+    <option value="{{ cat.id }}" {% if category_id == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+    {% endfor %}
+  </select>
+  <label for="id_sort">Sort</label>
+  <select name="sort" id="id_sort">
+    <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest first</option>
+    <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest first</option>
+  </select>
+  <button type="submit">Apply</button>
+</form>
 {% if user.is_authenticated %}
 <p><a href="{% url 'guide:post_create' %}">New post</a></p>
 {% endif %}
