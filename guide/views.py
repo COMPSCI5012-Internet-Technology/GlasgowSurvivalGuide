@@ -5,7 +5,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm
-from guide.models import Post
+from guide.models import Post,Category
 
 
 def index(request):
