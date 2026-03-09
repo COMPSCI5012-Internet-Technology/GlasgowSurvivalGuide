@@ -2,6 +2,7 @@
 Django settings for GlasgowSurvivalGuide project.
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -123,3 +124,6 @@ LOGOUT_REDIRECT_URL = 'guide:index'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+USE_MOCK_API = os.environ.get("USE_MOCK_API", "true").lower() in ("true", "1")
+NEWSDATA_API_KEY = os.environ.get("NEWSDATA_API_KEY", "")

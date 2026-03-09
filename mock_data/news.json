@@ -1,0 +1,36 @@
+{
+  "status": "success",
+  "totalResults": 5,
+  "results": [
+    {
+      "title": "Glasgow University announces new sustainability initiative",
+      "description": "The University of Glasgow has launched a campus-wide programme to cut carbon emissions by 2030.",
+      "link": "https://example.com/news/glasgow-uni-sustainability",
+      "pubDate": "2025-03-08T10:00:00Z"
+    },
+    {
+      "title": "West End food festival returns this spring",
+      "description": "Byres Road will host street food and live music for the annual Glasgow West End festival.",
+      "link": "https://example.com/news/west-end-food-festival",
+      "pubDate": "2025-03-07T14:30:00Z"
+    },
+    {
+      "title": "New cycling lanes to connect city centre and Partick",
+      "description": "Glasgow City Council has approved funding for dedicated cycle routes along the Kelvin corridor.",
+      "link": "https://example.com/news/glasgow-cycling-lanes",
+      "pubDate": "2025-03-06T09:15:00Z"
+    },
+    {
+      "title": "Student housing demand rises as semester starts",
+      "description": "Private landlords report high occupancy for flats near Glasgow universities.",
+      "link": "https://example.com/news/student-housing-glasgow",
+      "pubDate": "2025-03-05T16:00:00Z"
+    },
+    {
+      "title": "Kelvingrove Park events programme 2025",
+      "description": "Free concerts and family activities will run in Kelvingrove Park from April to September.",
+      "link": "https://example.com/news/kelvingrove-events-2025",
+      "pubDate": "2025-03-04T11:45:00Z"
+    }
+  ]
+}
