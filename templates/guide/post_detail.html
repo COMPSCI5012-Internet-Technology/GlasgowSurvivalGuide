@@ -86,5 +86,11 @@
   {% endif %}
 </section>
 
+{% if post.image %}
+    <img src="{{ post.image.url }}" 
+         alt="{% if post.image_description %}{{ post.image_description }}{% else %}Image posted by {{ post.author.username }}{% endif %}" 
+         class="img-fluid rounded">
+{% endif %}
+
 <p><a href="{% url 'guide:post_list' %}">Back to posts</a></p>
 {% endblock %}
