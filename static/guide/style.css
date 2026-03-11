@@ -1,0 +1,21 @@
+/* background image */
+.page-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+}
+/* WCAG 1.1.1 must add image description */
+.page-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* focus style WCAG2.4.7 */
+a:focus, button:focus, input:focus, select:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
