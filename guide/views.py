@@ -123,6 +123,22 @@ def post_list(request):
 
 @login_required
 def post_create(request):
+    categories = Category.objects.all().order_by('name')
+    grouped_categories = {}
+    for cat in categories:
+        if " - " in cat.name:
+            main_cat, sub_cat = cat.name.split(" - ", 1)
+        else:
+            main_cat = "General"
+            sub_cat = cat.name
+            
+        if main_cat not in grouped_categories:
+            grouped_categories[main_cat] = []
+            
+        grouped_categories[main_cat].append({
+            'id': cat.id,
+            'name': sub_cat
+        })
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -133,7 +149,14 @@ def post_create(request):
             return redirect('guide:post_detail', pk=post.pk)
     else:
         form = PostForm()
-    return render(request, 'guide/post_form.html', {'form': form})
+    return render(
+        request, 
+        'guide/post_form.html', 
+        {
+            'form': form,
+            'grouped_categories': grouped_categories 
+        }
+    )
 
 
 def post_detail(request, pk):

@@ -1,23 +1,75 @@
 {% extends 'base.html' %}
-{% block title %}New Post – Glasgow Survival Guide{% endblock %}
+{% load static %}
+
+{% block title %}Create New Post – Glasgow Survival Guide{% endblock %}
+
 {% block content %}
-<h1>New Post</h1>
-<form method="post" action="{% url 'guide:post_create' %}" enctype="multipart/form-data">
-  {% csrf_token %}
-  {% if form.non_field_errors %}
-    <ul class="errorlist">{{ form.non_field_errors }}</ul>
-  {% endif %}
-  {% for field in form %}
-    <div class="field">
-      <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}*{% endif %}</label>
-      {{ field }}
-      {% if field.help_text %}<p class="helptext">{{ field.help_text }}</p>{% endif %}
-      {% if field.errors %}<ul class="errorlist">{{ field.errors }}</ul>{% endif %}
+<div class="container mt-4 mb-4 flex-grow-1 d-flex flex-column align-items-center">
+    
+    <div class="bg-white bg-opacity-75 rounded-3 p-4 p-md-5 shadow-sm w-100" style="max-width: 800px;">
+        
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger p-2 small">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="mb-4 text-center">
+                <h2 class="h5 fw-bold mb-3 text-dark">Upload Photo</h2>
+                <div class="border border-2 border-secondary border-opacity-25 rounded-3 p-4 bg-light shadow-sm" style="border-style: dashed !important;">
+                    <div class="mb-2 text-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                        </svg>
+                    </div>
+                    <p class="small text-secondary fw-bold mb-3">Image Upload</p>
+                    <input type="file" name="image" class="form-control form-control-sm mx-auto w-75" id="id_image">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.category.id_for_label }}" class="form-label fw-bold small text-dark">Category (Optional)</label>
+                <select name="category" class="form-select bg-light border-0 shadow-sm" id="id_category" required>
+                    {% for group, options in grouped_categories.items %}
+                        <optgroup label="{{ group }}">
+                            {% for cat in options %}
+                                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.title.id_for_label }}" class="form-label fw-bold small text-dark">Title*</label>
+                <input type="text" name="title" class="form-control bg-light border-0 shadow-sm" id="id_title" placeholder="Enter post title" required>
+                {% if form.title.errors %}
+                    <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.description.id_for_label }}" class="form-label fw-bold small text-dark">Description*</label>
+                <textarea name="description" class="form-control bg-light border-0 shadow-sm" id="id_description" rows="5" placeholder="Write a description for your post..." required></textarea>
+            </div>
+
+           <div class="mb-4 d-flex justify-content-end">
+                <div class="form-check">
+                    <input type="checkbox" name="status" class="form-check-input border-secondary" id="id_status" checked>
+                    <label class="form-check-label small fw-bold text-dark" for="id_status">Public (everyone can see)</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+                Post
+            </button>
+
+        </form>
+        
     </div>
-  {% endfor %}
-  <div class="field">
-    <button type="submit">Post</button>
-  </div>
-</form>
-<p><a href="{% url 'guide:post_list' %}">Back to posts</a></p>
+</div>
 {% endblock %}
