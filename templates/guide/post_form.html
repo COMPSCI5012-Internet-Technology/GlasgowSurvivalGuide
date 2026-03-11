@@ -10,7 +10,16 @@
         
         <form method="post" action="" enctype="multipart/form-data">
             {% csrf_token %}
+            <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
             
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>Django 后台拒绝了你的提交，原因如下：</strong>
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
             {% if form.non_field_errors %}
                 <div class="alert alert-danger p-2 small">
                     {{ form.non_field_errors }}
@@ -59,10 +68,26 @@
                 {% endif %}
             </div>
 
+             <div class="mb-4">
+                <label for="id_rating" class="form-label fw-bold small text-dark">Rating*</label>
+                <select name="rating" class="form-select bg-light border-0 shadow-sm" id="id_rating" required>
+                    <option value="" selected disabled>Select a rating (1-5 stars)</option>
+                    <option value="5">⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+                    <option value="4">⭐⭐⭐⭐ (4 - Good)</option>
+                    <option value="3">⭐⭐⭐ (3 - Average)</option>
+                    <option value="2">⭐⭐ (2 - Poor)</option>
+                    <option value="1">⭐ (1 - Terrible)</option>
+                </select>
+                {% if form.rating.errors %}
+                    <div class="text-danger small mt-1">{{ form.rating.errors }}</div>
+                {% endif %}
+            </div>
+
             <div class="mb-4">
                 <label for="{{ form.description.id_for_label }}" class="form-label fw-bold small text-dark">Description*</label>
                 <textarea name="description" class="form-control bg-light border-0 shadow-sm" id="id_description" rows="5" placeholder="Write a description for your post..." required></textarea>
             </div>
+           
 
            <div class="mb-4 d-flex justify-content-end">
                 <div class="form-check">

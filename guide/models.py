@@ -62,9 +62,12 @@ class Post(models.Model):
         related_name="posts",
         blank=True,
     )
-
+    class Meta:
+        ordering = ['-created_at']
+        
     def __str__(self) -> str:
         return self.title
+    
 
 
 class Comment(models.Model):

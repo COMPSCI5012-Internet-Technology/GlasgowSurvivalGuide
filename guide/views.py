@@ -149,7 +149,7 @@ def post_create(request):
             post.author = request.user
             post.save()
             form.save_m2m()
-            return redirect('guide:post_detail', pk=post.pk)
+            return redirect('guide:post_list')
     else:
         form = PostForm()
     return render(
