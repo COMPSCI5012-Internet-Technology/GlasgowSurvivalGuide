@@ -46,7 +46,7 @@ a:focus, button:focus, input:focus, select:focus {
     margin-top: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
-/* post detail card – same style as post_list container */
+/* post detail card  */
 .post-detail-container {
     max-width: 900px;
     margin: 40px auto;
