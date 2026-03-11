@@ -108,9 +108,15 @@
                                 <div class="text-muted small">
                                     <i class="bi bi-calendar"></i> <strong>Posted:</strong> {{ post.created_at|date:"d M Y" }}
                                 </div>
-                                <div class="mt-2 w-100 d-flex align-items-center">
-                                    <span class="text-warning fw-bold me-2">Rating:</span>
-                                    <span class="badge bg-warning text-dark">{{ post.rating }} / 5</span>
+                                <div class="mt-2 w-100 d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <span class="text-warning fw-bold me-2">Rating:</span>
+                                        <span class="badge bg-warning text-dark">{{ post.rating }} / 5</span>
+                                    </div>
+                                    <div class="text-muted small fw-bold">
+                                        <span class="me-3">liked: {{ post.liked_by.count }}</span>
+                                        <span>comments: {{ post.comments.count }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

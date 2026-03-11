@@ -33,11 +33,42 @@
             {% endif %}
         </div>
         {% endif %}
-
         <div class="d-flex gap-2 mb-5">
-            <button class="btn btn-outline-primary btn-sm px-4">Like</button>
-            <button class="btn btn-outline-secondary btn-sm px-4">Save</button>
+            
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'guide:post_like' post.pk %}">
+                    {% csrf_token %}
+                    {% if is_liked %}
+                        <button type="submit" class="btn btn-primary btn-sm px-4 fw-bold shadow-sm">
+                            <i class="bi bi-hand-thumbs-up-fill me-1"></i> Unlike
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn btn-outline-primary btn-sm px-4 fw-bold">
+                            <i class="bi bi-hand-thumbs-up me-1"></i> Like
+                        </button>
+                    {% endif %}
+                </form>
+
+                <form method="post" action="{% url 'guide:post_save' post.pk %}">
+                    {% csrf_token %}
+                    {% if is_saved %}
+                        <button type="submit" class="btn btn-secondary btn-sm px-4 fw-bold shadow-sm">
+                            <i class="bi bi-bookmark-fill me-1"></i> Unsave
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn btn-outline-secondary btn-sm px-4 fw-bold">
+                            <i class="bi bi-bookmark me-1"></i> Save
+                        </button>
+                    {% endif %}
+                </form>
+            {% else %}
+                <a href="{% url 'guide:login' %}?next={{ request.path }}" class="btn btn-outline-secondary btn-sm px-4">
+                    Log in to Like & Save
+                </a>
+            {% endif %}
+
         </div>
+        
 
         <section class="mt-5 border-top pt-4">
             <h3 class="h5 fw-bold mb-4">Comments</h3>
