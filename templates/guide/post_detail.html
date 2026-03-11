@@ -3,158 +3,59 @@
 
 {% block title %}{{ post.title }} – Glasgow Survival Guide{% endblock %}
 
+{% comment %}style.css already loaded in base.html{% endcomment %}
+
 {% block content %}
-<div class="container mt-4 mb-5 flex-grow-1 d-flex justify-content-center">
-    <div class="bg-white bg-opacity-75 rounded-4 p-4 p-md-5 shadow-lg w-100" style="max-width: 900px; backdrop-filter: blur(10px);">
-        
-        <div class="mb-4">
-            <a href="{% url 'guide:post_list' %}" class="text-decoration-none text-secondary hover-primary fw-bold">
-                &larr; Back
-            </a>
-        </div>
-
-        <h1 class="display-5 fw-bold text-dark mb-2">{{ post.title }}</h1>
-        <div class="text-secondary small mb-4">
-            By <span class="fw-bold text-primary">{{ post.author.username }}</span> · {{ post.created_at|date:"d/m/Y H:i" }}
-            <span class="ms-3">Rating: <span class="text-warning">★</span> {{ post.rating }}/5</span>
-        </div>
-
-        <hr class="opacity-10 mb-4">
-
-        <div class="post-description fs-5 text-dark mb-4" style="line-height: 1.6; white-space: pre-wrap;">
-            {{ post.description }}
-        </div>
-
-        {% if post.image %}
-        <div class="text-center mb-4">
-            <img src="{{ post.image.url }}" class="img-fluid rounded-3 shadow-sm border" alt="{{ post.title }}">
-            {% if post.image_description %}
-                <p class="text-muted small mt-2 italic">{{ post.image_description }}</p>
-            {% endif %}
-        </div>
-        {% endif %}
-        <div class="d-flex gap-2 mb-5">
-            {% if user.is_authenticated %}
-                
-                <button id="ajax-like-btn" data-url="{% url 'guide:post_like' post.pk %}" class="btn {% if is_liked %}btn-primary shadow-sm{% else %}btn-outline-primary{% endif %} btn-sm px-4 fw-bold">
-                    <i id="like-icon" class="bi {% if is_liked %}bi-hand-thumbs-up-fill{% else %}bi-hand-thumbs-up{% endif %} me-1"></i> 
-                    <span id="like-text">{% if is_liked %}Unlike{% else %}Like{% endif %}</span>
-                </button>
-
-                <button id="ajax-save-btn" data-url="{% url 'guide:post_save' post.pk %}" class="btn {% if is_saved %}btn-secondary shadow-sm{% else %}btn-outline-secondary{% endif %} btn-sm px-4 fw-bold">
-                    <i id="save-icon" class="bi {% if is_saved %}bi-bookmark-fill{% else %}bi-bookmark{% endif %} me-1"></i> 
-                    <span id="save-text">{% if is_saved %}Unsave{% else %}Save{% endif %}</span>
-                </button>
-
-            {% else %}
-                <a href="{% url 'guide:login' %}?next={{ request.path }}" class="btn btn-outline-secondary btn-sm px-4">
-                    Log in to Like & Save
-                </a>
-            {% endif %}
-        </div>
-        
-
-        <section class="mt-5 border-top pt-4">
-            <h3 class="h5 fw-bold mb-4">Comments</h3>
-            
-            {% if user.is_authenticated %}
-                <form id="comment_form" method="post" action="{% url 'guide:post_detail' post.pk %}" class="mb-4" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        {{ comment_form.as_p }}
-                    </div>
-                    
-                    <button type="submit" name="comment_form" value="true" class="btn btn-primary btn-sm px-4 fw-bold">Post Comment</button>
-                </form>
-            {% else %}
-                <p class="small text-muted mb-4">Please <a href="{% url 'guide:login' %}">log in</a> to leave a comment.</p>
-            {% endif %}
-
-           <div class="comment-list">
-    {% if comment_list %}
-        {% for comment in comment_list %}
-            <div class="mb-3 pb-3 border-bottom">
-                <div class="d-flex justify-content-between small mb-1">
-                    <span class="fw-bold text-primary">{{ comment.author.username }}</span>
-                    <span class="text-muted">{{ comment.created_at|date:"d M Y H:i" }}</span>
-                </div>
-                
-                <p class="mb-2 small text-dark">{{ comment.content }}</p>
-
-                {% if comment.image %}
-                    <div class="mt-2">
-                        <img src="{{ comment.image.url }}" alt="Comment image" class="img-fluid rounded border shadow-sm" style="max-height: 200px; object-fit: contain;">
-                    </div>
-                {% endif %}
-                
-            </div>
-        {% endfor %}
-    {% else %}
-        <p class="text-muted small">No comments yet. Be the first to say something!</p>
-    {% endif %}
-</div>
-        </section>
-        
+<div class="container mt-4 mb-4 post-detail-container">
+  <div class="bg-white bg-opacity-75 rounded-3 p-4 shadow-sm">
+    
+    <div class="mb-4">
+        <a href="{% url 'guide:post_list' %}" class="text-decoration-none text-secondary fw-bold">&larr; Back</a>
     </div>
+
+    <h1 class="display-5 fw-bold text-dark mb-2">{{ post.title }}</h1>
+    
+    <div class="text-secondary small mb-4">
+        By <span class="fw-bold text-primary">{{ post.author.username }}</span> · {{ post.created_at|date:"d/m/Y H:i" }}
+        <span class="ms-3">Rating: <span class="text-warning">★</span> {{ post.rating }}/5</span>
+    </div>
+
+    <hr class="opacity-10 mb-4">
+
+    <div class="post-description fs-5 text-dark mb-4 post-content-text" >
+        {{ post.description }}
+    </div>
+
+    {% if post.image %}
+    <div class="text-center mb-4">
+        <img src="{{ post.image.url }}" class="img-fluid rounded shadow-sm post-detail-image">
+    </div>
+    {% endif %}
+
+    <div class="d-flex gap-2 mb-5">
+        {% if user.is_authenticated %}
+            <button id="ajax-like-btn" data-url="{% url 'guide:post_like' post.pk %}" class="btn {% if is_liked %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4 fw-bold">Like</button>
+            <button id="ajax-save-btn" data-url="{% url 'guide:post_save' post.pk %}" class="btn {% if is_saved %}btn-secondary{% else %}btn-outline-secondary{% endif %} btn-sm px-4 fw-bold">Save</button>
+        {% endif %}
+    </div>
+
+    <section class="mt-5 border-top pt-4">
+        <h3 class="h5 fw-bold mb-4">Comments</h3>
+        <div class="comment-list">
+            {% for comment in comment_list %}
+                <div class="mb-3 pb-3 border-bottom">
+                    <p class="mb-1 small"><strong>{{ comment.author.username }}</strong> · {{ comment.created_at|date:"d M Y" }}</p>
+                    <p class="mb-2">{{ comment.content }}</p>
+                    {% if comment.image %}
+                        <img src="{{ comment.image.url }}" class="comment-thumbnail">
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+  </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-$(document).ready(function() {
-    
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    const csrftoken = getCookie('csrftoken');
-    $.ajaxSetup({ headers: { 'X-CSRFToken': csrftoken } });
-
-   
-    $('#ajax-like-btn').click(function(e) {
-        e.preventDefault();
-        var url = $(this).data('url');
-        
-        $.post(url, function(data) {
-           
-            if (data.is_liked) {
-                $('#ajax-like-btn').removeClass('btn-outline-primary').addClass('btn-primary shadow-sm');
-                $('#like-icon').removeClass('bi-hand-thumbs-up').addClass('bi-hand-thumbs-up-fill');
-                $('#like-text').text('Unlike');
-            } else {
-                $('#ajax-like-btn').removeClass('btn-primary shadow-sm').addClass('btn-outline-primary');
-                $('#like-icon').removeClass('bi-hand-thumbs-up-fill').addClass('bi-hand-thumbs-up');
-                $('#like-text').text('Like');
-            }
-        });
-    });
-
-    $('#ajax-save-btn').click(function(e) {
-        e.preventDefault();
-        var url = $(this).data('url');
-        
-        $.post(url, function(data) {
-            if (data.is_saved) {
-                $('#ajax-save-btn').removeClass('btn-outline-secondary').addClass('btn-secondary shadow-sm');
-                $('#save-icon').removeClass('bi-bookmark').addClass('bi-bookmark-fill');
-                $('#save-text').text('Unsave');
-            } else {
-                $('#ajax-save-btn').removeClass('btn-secondary shadow-sm').addClass('btn-outline-secondary');
-                $('#save-icon').removeClass('bi-bookmark-fill').addClass('bi-bookmark');
-                $('#save-text').text('Save');
-            }
-        });
-    });
-});
-</script>
+<script src="{% static 'guide/js/post_detail.js' %}"></script>
 {% endblock %}

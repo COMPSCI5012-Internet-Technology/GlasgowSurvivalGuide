@@ -25,7 +25,7 @@
                 <input type="hidden" name="category" value="{{ category_id }}"> 
                 <input type="hidden" name="q" value="{{ q }}"> 
 
-                <select name="sort" class="form-select form-select-sm w-auto shadow-sm border-secondary" style="cursor: pointer;" onchange="this.form.submit()">
+                <select id="sort-select" name="sort" class="form-select form-select-sm w-auto shadow-sm border-secondary" style="cursor: pointer;">
                     <option value="newest" {% if sort == "newest" %}selected{% endif %}>Sort by: Newest</option>
                     <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Sort by: Oldest</option>
                 </select>
@@ -160,4 +160,5 @@
         </div> 
     </div>
 </div>
+    <script src="{% static 'guide/js/post_list.js' %}"></script>
 {% endblock %}

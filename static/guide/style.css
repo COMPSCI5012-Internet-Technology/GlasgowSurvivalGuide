@@ -1,3 +1,8 @@
+/* Override Bootstrap white body so background image shows through */
+body {
+    background: transparent !important;
+}
+
 /* background image */
 .page-bg {
     position: fixed;
@@ -18,4 +23,32 @@
 a:focus, button:focus, input:focus, select:focus {
     outline: 2px solid #2563eb;
     outline-offset: 2px;
+}
+
+
+
+.post-content-text {
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: #2d3436;
+}
+
+/* post detail page image */
+.post-detail-image {
+    max-height: 500px;
+}
+
+/* comment image thumbnail */
+.comment-thumbnail {
+    max-height: 200px;
+    width: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+/* post detail card – same style as post_list container */
+.post-detail-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
 }
