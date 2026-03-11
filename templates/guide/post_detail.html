@@ -7,6 +7,12 @@
 <div class="container mt-4 mb-5 flex-grow-1 d-flex justify-content-center">
     <div class="bg-white bg-opacity-75 rounded-4 p-4 p-md-5 shadow-lg w-100" style="max-width: 900px; backdrop-filter: blur(10px);">
         
+        <div class="mb-4">
+            <a href="{% url 'guide:post_list' %}" class="text-decoration-none text-secondary hover-primary fw-bold">
+                &larr; Back
+            </a>
+        </div>
+
         <h1 class="display-5 fw-bold text-dark mb-2">{{ post.title }}</h1>
         <div class="text-secondary small mb-4">
             By <span class="fw-bold text-primary">{{ post.author.username }}</span> · {{ post.created_at|date:"d/m/Y H:i" }}
@@ -35,32 +41,44 @@
 
         <section class="mt-5 border-top pt-4">
             <h3 class="h5 fw-bold mb-4">Comments</h3>
+            
             {% if user.is_authenticated %}
-                <form method="post" action="{% url 'guide:post_detail' post.pk %}" class="mb-4">
+                <form id="comment_form" method="post" action="{% url 'guide:post_detail' post.pk %}" class="mb-4" enctype="multipart/form-data">
                     {% csrf_token %}
+                    
                     <div class="mb-3">
-                        <textarea name="content" class="form-control" rows="3" placeholder="Write a comment..." required></textarea>
+                        {{ comment_form.as_p }}
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm px-4 fw-bold">Post Comment</button>
+                    
+                    <button type="submit" name="comment_form" value="true" class="btn btn-primary btn-sm px-4 fw-bold">Post Comment</button>
                 </form>
             {% else %}
                 <p class="small text-muted mb-4">Please <a href="{% url 'guide:login' %}">log in</a> to leave a comment.</p>
             {% endif %}
 
-            {% if post.comments.all %}
-                {% for comment in post.comments.all %}
-                    <div class="mb-3 pb-3 border-bottom">
-                        <div class="d-flex justify-content-between small mb-1">
-                            <span class="fw-bold text-primary">{{ comment.author.username }}</span>
-                            <span class="text-muted">{{ comment.created_at|date:"d M Y H:i" }}</span>
-                        </div>
-                        <p class="mb-0 small text-dark">{{ comment.content }}</p>
+           <div class="comment-list">
+    {% if comment_list %}
+        {% for comment in comment_list %}
+            <div class="mb-3 pb-3 border-bottom">
+                <div class="d-flex justify-content-between small mb-1">
+                    <span class="fw-bold text-primary">{{ comment.author.username }}</span>
+                    <span class="text-muted">{{ comment.created_at|date:"d M Y H:i" }}</span>
+                </div>
+                
+                <p class="mb-2 small text-dark">{{ comment.content }}</p>
+
+                {% if comment.image %}
+                    <div class="mt-2">
+                        <img src="{{ comment.image.url }}" alt="Comment image" class="img-fluid rounded border shadow-sm" style="max-height: 200px; object-fit: contain;">
                     </div>
-                {% endfor %}
-            {% else %}
-                <p class="text-muted small">No comments yet. Be the first to say something!</p>
-            {% endif %}
-        
+                {% endif %}
+                
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted small">No comments yet. Be the first to say something!</p>
+    {% endif %}
+</div>
         </section>
         
     </div>

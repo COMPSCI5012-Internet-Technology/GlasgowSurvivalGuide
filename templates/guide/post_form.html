@@ -12,20 +12,17 @@
             {% csrf_token %}
             <form method="post" action="" enctype="multipart/form-data">
             {% csrf_token %}
-            
-            {% if form.errors %}
-                <div class="alert alert-danger">
-                    <strong>Django 后台拒绝了你的提交，原因如下：</strong>
-                    {{ form.errors }}
-                </div>
-            {% endif %}
 
             {% if form.non_field_errors %}
                 <div class="alert alert-danger p-2 small">
                     {{ form.non_field_errors }}
                 </div>
             {% endif %}
-
+            <div class="'mb-4">
+                <a href="{% url 'guide:post_list' %}" class="text-decoration-none text-secondary fw-bold">
+                    &larr; Back
+                </a>
+            </div>
            <div class="mb-4 text-center">
                 <h2 class="h5 fw-bold mb-3 text-dark">Upload Photo</h2>
                 <div class="border border-2 border-secondary border-opacity-25 rounded-3 p-4 bg-light shadow-sm" style="border-style: dashed !important;">
