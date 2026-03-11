@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login,logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404, HttpResponse
@@ -60,6 +60,9 @@ def login_view(request):
         form = EmailLoginForm()
     return render(request, 'guide/login.html', {'form': form, 'next': next_url})
 
+def user_logout(request):
+    logout(request)
+    return redirect('guide:index')
 
 def post_list(request):
     q = request.GET.get('q', '').strip()
