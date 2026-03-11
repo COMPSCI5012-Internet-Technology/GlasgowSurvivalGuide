@@ -91,6 +91,20 @@ def post_list(request):
         post_list_qs = post_list_qs.order_by('-created_at')
 
     categories = Category.objects.all().order_by('name')
+    grouped_categories = {}
+    for cat in categories:
+        if " - " in cat.name:
+            main_cat, sub_cat = cat.name.split(" - ", 1)
+        else:
+            main_cat = "General"
+            sub_cat = cat.name
+        if main_cat not in grouped_categories:
+            grouped_categories[main_cat] = []
+            
+        grouped_categories[main_cat].append({
+            'id': cat.id,
+            'name': sub_cat  
+        })
     recent_news = News.objects.all().order_by('-time')[:5]
     return render(
         request,
@@ -102,7 +116,7 @@ def post_list(request):
             'category_id': category_id,
             'sort': sort,
             'recent_news': recent_news,
-
+            'grouped_categories': grouped_categories,
         },
     )
 

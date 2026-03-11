@@ -36,20 +36,43 @@
 
         <div class="row">
             
-            <div class="col-md-3">
+           <div class="col-md-3">
                 <h2 class="fs-5 fw-bold mb-3">Categories</h2>
                 <div class="list-group list-group-flush mb-4 bg-transparent">
-                    <a href="{% url 'guide:post_list' %}?q={{ q }}&sort={{ sort }}" class="list-group-item list-group-item-action bg-transparent border-0 {% if not category_id %}fw-bold text-primary{% endif %}">
+                    
+                    <a href="{% url 'guide:post_list' %}?q={{ q }}&sort={{ sort }}" 
+                       class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-1 {% if not category_id %}fw-bold text-primary{% else %}text-dark{% endif %}">
                         ALL
                     </a>
-                    {% for cat in categories %}
-                    <a href="{% url 'guide:post_list' %}?category={{ cat.id }}&q={{ q }}&sort={{ sort }}" class="list-group-item list-group-item-action bg-transparent border-0 {% if category_id == cat.id|stringformat:'s' %}fw-bold text-primary{% endif %}">
-                        {{ cat.name }}
-                    </a>
+
+                    {% for main_cat, sub_cats in grouped_categories.items %}
+                        
+                        {% if main_cat == "General" %}
+                            {% for cat in sub_cats %}
+                            <a href="{% url 'guide:post_list' %}?category={{ cat.id }}&q={{ q }}&sort={{ sort }}" 
+                               class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-1 {% if category_id == cat.id|stringformat:'s' %}fw-bold text-primary{% else %}text-dark{% endif %}">
+                                {{ cat.name }}
+                            </a>
+                            {% endfor %}
+                            
+                        {% else %}
+                            <div class="list-group-item bg-transparent border-0 fw-bold px-2 py-1 mt-2 text-dark">
+                                {{ main_cat }}
+                            </div>
+                            
+                            {% for cat in sub_cats %}
+                            <a href="{% url 'guide:post_list' %}?category={{ cat.id }}&q={{ q }}&sort={{ sort }}" 
+                               class="list-group-item list-group-item-action bg-transparent border-0 ps-4 py-1 {% if category_id == cat.id|stringformat:'s' %}fw-bold text-primary{% else %}text-secondary{% endif %}">
+                                {{ cat.name }}
+                            </a>
+                            {% endfor %}
+                            
+                        {% endif %}
+                        
                     {% endfor %}
+                    
                 </div>
             </div>
-
             <div class="col-md-6 border-start border-end px-4">
                 {% if post_list %}
                     {% for post in post_list %}
