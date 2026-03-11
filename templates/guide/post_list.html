@@ -76,10 +76,26 @@
                 <h2 class="fs-5 fw-bold mb-3 border-bottom pb-2 border-dark">LOCAL NEWS</h2>
                 
                 <div class="bg-white p-3 rounded border shadow-sm">
-                    <p class="small text-secondary mb-3">Check out what's happening in Glasgow today!</p>
-                    <a href="{% url 'guide:news_list' %}" class="btn btn-sm btn-outline-primary w-100">
-                        Read All News &rarr;
-                    </a>
+                    {% if recent_news %}
+                        <ul class="list-unstyled mb-0">
+                        {% for news in recent_news %}
+                            <li class="mb-3 border-bottom pb-2">
+                                <h3 class="h6 fw-bold mb-1 text-dark">{{ news.title }}</h3>
+                                <div class="text-muted" style="font-size: 0.75rem;">
+                                    {{ news.time|date:"M d, Y" }}
+                                </div>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                        
+                        <div class="mt-3 text-center">
+                            <a href="{% url 'guide:news_list' %}" class="btn btn-sm btn-outline-primary w-100">
+                                Read All News &rarr;
+                            </a>
+                        </div>
+                    {% else %}
+                        <p class="small text-secondary mb-0">No news right now.</p>
+                    {% endif %}
                 </div>
             </div>
 

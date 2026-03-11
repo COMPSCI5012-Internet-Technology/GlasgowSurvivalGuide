@@ -91,6 +91,7 @@ def post_list(request):
         post_list_qs = post_list_qs.order_by('-created_at')
 
     categories = Category.objects.all().order_by('name')
+    recent_news = News.objects.all().order_by('-time')[:5]
     return render(
         request,
         'guide/post_list.html',
@@ -100,6 +101,8 @@ def post_list(request):
             'categories': categories,
             'category_id': category_id,
             'sort': sort,
+            'recent_news': recent_news,
+
         },
     )
 
