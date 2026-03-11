@@ -76,17 +76,33 @@
             <div class="col-md-6 border-start border-end px-4">
                 {% if post_list %}
                     {% for post in post_list %}
-                    <div class="border rounded p-3 mb-3 bg-white shadow-sm">
-                        <h3 class="fs-5 mb-2">
-                            <a href="{% url 'guide:post_detail' pk=post.pk %}" class="text-decoration-none text-dark fw-bold">
-                                {{ post.title }}
-                            </a>
-                        </h3>
-                        <p class="text-secondary small mb-2">{{ post.description|truncatewords:20 }}</p>
-                        <div class="text-muted" style="font-size: 0.8rem;">
-                            Posted {{ post.created_at|timesince }} ago
+                        <div class="card border-0 shadow-sm mb-4 rounded-3 overflow-hidden">
+                            
+                            {% if post.image %}
+                                <a href="{% url 'guide:post_detail' pk=post.pk %}">
+                                    <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                                </a>
+                            {% endif %}
+
+                            <div class="card-body">
+                                <h3 class="h5 mb-2">
+                                    <a href="{% url 'guide:post_detail' pk=post.pk %}" class="text-decoration-none text-dark fw-bold hover-primary">
+                                        {{ post.title }}
+                                    </a>
+                                </h3>
+
+                                <p class="text-secondary small mb-3">{{ post.description|truncatechars:80 }}</p>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-muted" style="font-size: 0.75rem;">
+                                        <span class="fw-bold text-primary">{{ post.author.username }}</span> · {{ post.created_at|timesince }} ago
+                                    </div>
+                                    <div class="text-warning small">
+                                        {{ post.rating }} ★
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     {% endfor %}
                 {% else %}
                     <div class="text-center py-5 text-muted">
