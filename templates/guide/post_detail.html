@@ -34,39 +34,23 @@
         </div>
         {% endif %}
         <div class="d-flex gap-2 mb-5">
-            
             {% if user.is_authenticated %}
-                <form method="post" action="{% url 'guide:post_like' post.pk %}">
-                    {% csrf_token %}
-                    {% if is_liked %}
-                        <button type="submit" class="btn btn-primary btn-sm px-4 fw-bold shadow-sm">
-                            <i class="bi bi-hand-thumbs-up-fill me-1"></i> Unlike
-                        </button>
-                    {% else %}
-                        <button type="submit" class="btn btn-outline-primary btn-sm px-4 fw-bold">
-                            <i class="bi bi-hand-thumbs-up me-1"></i> Like
-                        </button>
-                    {% endif %}
-                </form>
+                
+                <button id="ajax-like-btn" data-url="{% url 'guide:post_like' post.pk %}" class="btn {% if is_liked %}btn-primary shadow-sm{% else %}btn-outline-primary{% endif %} btn-sm px-4 fw-bold">
+                    <i id="like-icon" class="bi {% if is_liked %}bi-hand-thumbs-up-fill{% else %}bi-hand-thumbs-up{% endif %} me-1"></i> 
+                    <span id="like-text">{% if is_liked %}Unlike{% else %}Like{% endif %}</span>
+                </button>
 
-                <form method="post" action="{% url 'guide:post_save' post.pk %}">
-                    {% csrf_token %}
-                    {% if is_saved %}
-                        <button type="submit" class="btn btn-secondary btn-sm px-4 fw-bold shadow-sm">
-                            <i class="bi bi-bookmark-fill me-1"></i> Unsave
-                        </button>
-                    {% else %}
-                        <button type="submit" class="btn btn-outline-secondary btn-sm px-4 fw-bold">
-                            <i class="bi bi-bookmark me-1"></i> Save
-                        </button>
-                    {% endif %}
-                </form>
+                <button id="ajax-save-btn" data-url="{% url 'guide:post_save' post.pk %}" class="btn {% if is_saved %}btn-secondary shadow-sm{% else %}btn-outline-secondary{% endif %} btn-sm px-4 fw-bold">
+                    <i id="save-icon" class="bi {% if is_saved %}bi-bookmark-fill{% else %}bi-bookmark{% endif %} me-1"></i> 
+                    <span id="save-text">{% if is_saved %}Unsave{% else %}Save{% endif %}</span>
+                </button>
+
             {% else %}
                 <a href="{% url 'guide:login' %}?next={{ request.path }}" class="btn btn-outline-secondary btn-sm px-4">
                     Log in to Like & Save
                 </a>
             {% endif %}
-
         </div>
         
 
@@ -114,4 +98,63 @@
         
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    $.ajaxSetup({ headers: { 'X-CSRFToken': csrftoken } });
+
+   
+    $('#ajax-like-btn').click(function(e) {
+        e.preventDefault();
+        var url = $(this).data('url');
+        
+        $.post(url, function(data) {
+           
+            if (data.is_liked) {
+                $('#ajax-like-btn').removeClass('btn-outline-primary').addClass('btn-primary shadow-sm');
+                $('#like-icon').removeClass('bi-hand-thumbs-up').addClass('bi-hand-thumbs-up-fill');
+                $('#like-text').text('Unlike');
+            } else {
+                $('#ajax-like-btn').removeClass('btn-primary shadow-sm').addClass('btn-outline-primary');
+                $('#like-icon').removeClass('bi-hand-thumbs-up-fill').addClass('bi-hand-thumbs-up');
+                $('#like-text').text('Like');
+            }
+        });
+    });
+
+    $('#ajax-save-btn').click(function(e) {
+        e.preventDefault();
+        var url = $(this).data('url');
+        
+        $.post(url, function(data) {
+            if (data.is_saved) {
+                $('#ajax-save-btn').removeClass('btn-outline-secondary').addClass('btn-secondary shadow-sm');
+                $('#save-icon').removeClass('bi-bookmark').addClass('bi-bookmark-fill');
+                $('#save-text').text('Unsave');
+            } else {
+                $('#ajax-save-btn').removeClass('btn-secondary shadow-sm').addClass('btn-outline-secondary');
+                $('#save-icon').removeClass('bi-bookmark-fill').addClass('bi-bookmark');
+                $('#save-text').text('Save');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

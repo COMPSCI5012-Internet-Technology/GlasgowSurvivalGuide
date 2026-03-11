@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.shortcuts import render, redirect  
 from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm
 from guide.models import Category, CollectionList, News, Post
+from django.http import JsonResponse
 
 from guide.forms import (
     CollectionCreateForm,
@@ -216,14 +217,16 @@ def post_like(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if not post.status and request.user != post.author:
         raise Http404
+        
+    is_liked = False
     if post.liked_by.filter(pk=request.user.pk).exists():
         post.liked_by.remove(request.user)
+        is_liked = False
     else:
         post.liked_by.add(request.user)
-    next_url = request.GET.get('next') or request.POST.get('next')
-    if next_url:
-        return redirect(next_url)
-    return redirect('guide:post_detail', pk=post.pk)
+        is_liked = True
+        
+    return JsonResponse({'is_liked': is_liked, 'likes_count': post.liked_by.count()})
 
 
 @login_required
@@ -231,14 +234,16 @@ def post_save(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if not post.status and request.user != post.author:
         raise Http404
+        
+    is_saved = False
     if post.saved_by.filter(pk=request.user.pk).exists():
         post.saved_by.remove(request.user)
+        is_saved = False
     else:
         post.saved_by.add(request.user)
-    next_url = request.GET.get('next') or request.POST.get('next')
-    if next_url:
-        return redirect(next_url)
-    return redirect('guide:post_detail', pk=post.pk)
+        is_saved = True
+        
+    return JsonResponse({'is_saved': is_saved})
 
 
 @login_required
