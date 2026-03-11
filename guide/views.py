@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-
+from django.shortcuts import render, redirect  
 from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm
 from guide.models import Category, CollectionList, News, Post
 
@@ -16,7 +16,7 @@ from guide.forms import (
 )
 
 def index(request):
-    return render(request, 'guide/index.html')
+   return redirect('guide:post_list')
 
 
 def news_list(request):

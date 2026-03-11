@@ -1,34 +1,60 @@
-{% extends 'guide/auth_base.html' %}
-{% block title %}Login – Glasgow Survival Guide{% endblock %}
-{% block auth_tabs %}
-  <h1 class="auth-tab active" style="margin:0;flex:1;font-size:16px;font-weight:600;">Login</h1>
-  <a href="{% url 'guide:register' %}" class="auth-tab inactive">Register</a>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block nav_user_links %}
 {% endblock %}
-{% block card_content %}
-  <form method="post" action="{% url 'guide:login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">
-    {% csrf_token %}
-    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-    {% if form.non_field_errors %}
-      <ul class="errorlist">{{ form.non_field_errors }}</ul>
-    {% endif %}
-    <div class="field">
-      <label for="id_email">UofG Email</label>
-      <p id="email-hint" class="hint">Please use your @gla.ac.uk address</p>
-      <input type="email" name="email" id="id_email" value="{{ form.email.value|default:'' }}" placeholder="email@gla.ac.uk" aria-describedby="email-hint" autocomplete="email" required>
-      {% if form.email.errors %}
-        <ul class="errorlist">{{ form.email.errors }}</ul>
-      {% endif %}
+
+{% block title %}Log In – Glasgow Survival Guide{% endblock %}
+
+{% block content %}
+<div class="container flex-grow-1 d-flex justify-content-center align-items-center mt-4 mb-5">
+    <div class="bg-white rounded-3 shadow p-4 p-sm-5 w-100" style="max-width: 500px;">
+        <div class="d-flex border-bottom mb-4 text-center">
+            <a href="{% url 'guide:login' %}" class="w-50 text-decoration-none fw-bold text-dark border-bottom border-primary border-3 pb-3">
+                Login
+            </a>
+            <a href="{% url 'guide:register' %}" class="w-50 text-decoration-none text-secondary pb-3">
+                Register
+            </a>
+          </div>
+        <form method="post" action="">
+            {% csrf_token %}
+            
+            <input type="hidden" name="next" value="{{ next }}">
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger p-2 small text-center">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            <div class="mb-4">
+                <label for="id_email" class="form-label fw-bold small text-dark mb-1">UofG Email</label>
+                <div class="form-text text-secondary mt-0 mb-2" style="font-size: 0.75rem;">Please use your @gla.ac.uk address</div>
+                <input type="email" name="email" class="form-control border-secondary border-opacity-25" id="id_email" placeholder="email@gla.ac.uk" required>                
+                {% if form.email.errors %}
+                    <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <label for="id_password" class="form-label fw-bold small text-dark mb-1">Password</label>
+                <input type="password" name="password" class="form-control border-secondary border-opacity-25" id="id_password" required>
+                
+                {% if form.password.errors %}
+                    <div class="text-danger small mt-1">{{ form.password.errors }}</div>
+                {% endif %}
+                
+                <div class="text-end mt-2">
+                    <a href="#" class="text-decoration-none text-secondary" style="font-size: 0.8rem;">Forget password ?</a>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+                Login
+            </button>
+            
+        </form>
+        
     </div>
-    <div class="field">
-      <label for="id_password">Password</label>
-      <input type="password" name="password" id="id_password" autocomplete="current-password" required>
-      {% if form.password.errors %}
-        <ul class="errorlist">{{ form.password.errors }}</ul>
-      {% endif %}
-    </div>
-    <div class="forgot-wrap">
-      <a href="#" class="forgot">Forget password ?</a>
-    </div>
-    <button type="submit" class="btn-submit">Login</button>
-  </form>
+</div>
 {% endblock %}

@@ -1,14 +1,35 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block nav_user_links %}
+{% endblock %}
+
+{% block title %}Home – Glasgow Survival Guide{% endblock %}
+
 {% block content %}
-<h1>Glasgow Survival Guide</h1>
-{% if user.is_authenticated %}
-  <p>You are logged in as {{ user.email }}.</p>
-  <form method="post" action="{% url 'guide:logout' %}">
-    {% csrf_token %}
-    <button type="submit">Log out</button>
-  </form>
-  <p><a href="{% url 'guide:about' %}">About</a></p>
-{% else %}
-  <p><a href="{% url 'guide:login' %}">Log in</a> | <a href="{% url 'guide:register' %}">Register</a></p>
-{% endif %}
+<div class="container flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center mt-5 mb-5">
+    
+    <div class="bg-white bg-opacity-75 rounded-4 p-5 shadow-lg w-100" style="max-width: 700px; backdrop-filter: blur(5px);">
+        
+        <h1 class="display-5 fw-bold text-dark mb-3">Welcome to Glasgow</h1>
+        <p class="lead text-secondary mb-5">
+            Your ultimate survival guide for university life, housing, food, and local events. <br>Built by students, for students.
+        </p>
+
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+            
+            <a href="{% url 'guide:post_list' %}" class="btn btn-primary btn-lg px-5 fw-bold shadow-sm">
+                Explore Posts
+            </a>
+            
+            {% if not user.is_authenticated %}
+            <a href="{% url 'guide:login' %}" class="btn btn-outline-dark btn-lg px-5 fw-bold bg-white bg-opacity-50">
+                Log in / Sign up
+            </a>
+            {% endif %}
+            
+        </div>
+        
+    </div>
+</div>
 {% endblock %}
