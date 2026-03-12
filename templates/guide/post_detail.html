@@ -3,8 +3,6 @@
 
 {% block title %}{{ post.title }} – Glasgow Survival Guide{% endblock %}
 
-{% comment %}style.css already loaded in base.html{% endcomment %}
-
 {% block content %}
 <div class="container mt-4 mb-4 post-detail-container">
   <div class="bg-white bg-opacity-75 rounded-3 p-4 shadow-sm">
@@ -32,12 +30,13 @@
     </div>
     {% endif %}
 
+    {% if user.is_authenticated %}
     <div class="d-flex gap-2 mb-5">
-        {% if user.is_authenticated %}
-            <button id="ajax-like-btn" data-url="{% url 'guide:post_like' post.pk %}" class="btn {% if is_liked %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4 fw-bold" aria-label="{% if is_liked %}Unlike this post{% else %}Like this post{% endif %}">{% if is_liked %}Unlike{% else %}Like{% endif %}</button>
-            <button id="ajax-save-btn" data-url="{% url 'guide:post_save' post.pk %}" class="btn {% if is_saved %}btn-secondary{% else %}btn-outline-secondary{% endif %} btn-sm px-4 fw-bold" aria-label="{% if is_saved %}Unsave this post{% else %}Save this post{% endif %}">{% if is_saved %}Unsave{% else %}Save{% endif %}</button>
-        {% endif %}
+        {% csrf_token %}
+        <button id="ajax-like-btn" data-url="{% url 'guide:post_like' post.pk %}" class="btn {% if is_liked %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4 fw-bold" aria-label="{% if is_liked %}Liked{% else %}Like this post{% endif %}">{% if is_liked %}Liked{% else %}Like{% endif %}</button>
+        <button id="ajax-save-btn" data-url="{% url 'guide:post_save' post.pk %}" class="btn {% if is_saved %}btn-secondary{% else %}btn-outline-secondary{% endif %} btn-sm px-4 fw-bold" aria-label="{% if is_saved %}Saved{% else %}Save this post{% endif %}">{% if is_saved %}Saved{% else %}Save{% endif %}</button>
     </div>
+    {% endif %}
 
     <section class="mt-5 border-top pt-4">
         <h2 class="h5 fw-bold mb-4">Comments</h2>
