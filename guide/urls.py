@@ -11,6 +11,7 @@ urlpatterns = [
     path('accounts/register/', views.register, name='register'),
     path('accounts/login/', views.login_view, name='login'),
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
+    path('accounts/profile/', views.profile_view, name='profile'),
     path('posts/', views.post_list, name='post_list'),
     path('posts/new/', views.post_create, name='post_create'),
     path('posts/<int:pk>/like/', views.post_like, name='post_like'),

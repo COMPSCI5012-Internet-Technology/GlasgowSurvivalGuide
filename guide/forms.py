@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
 
-from guide.models import CollectionList, Comment, Post
+from guide.models import CollectionList, Comment, Post, UserProfile
 
 User = get_user_model()
 
@@ -148,3 +148,14 @@ class CollectionCreateForm(forms.Form):
         if self.user and CollectionList.objects.filter(owner=self.user, name=name).exists():
             raise forms.ValidationError("You already have a collection with this name.")
         return name
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ("academic_year", "department", "email", "icon")
+        widgets = {
+            "academic_year": forms.TextInput(attrs={"placeholder": "e.g. 2024"}),
+            "department": forms.TextInput(attrs={"placeholder": "e.g. Information Technology"}),
+            "email": forms.EmailInput(attrs={"autocomplete": "email"}),
+        }

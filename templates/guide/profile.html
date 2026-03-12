@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile – Glasgow Survival Guide{% endblock %}
+
+{% block content %}
+<section class="container my-4">
+  <div class="bg-white bg-opacity-75 rounded-3 shadow p-4">
+    <div class="row align-items-center mb-4">
+      <div class="col-md-4 text-center">
+        {% if profile.icon %}
+          <img src="{{ profile.icon.url }}" alt="{{ profile.user.username }} profile picture"
+               class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+        {% else %}
+          <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white"
+               style="width: 120px; height: 120px;">
+            <span class="fs-2">{{ profile.user.username|first|upper }}</span>
+          </div>
+        {% endif %}
+      </div>
+      <div class="col-md-8">
+        <h1 class="h3 mb-2">
+          {{ profile.user.username }}
+        </h1>
+        {% if profile.academic_year %}
+          <p class="mb-1 text-muted">Academic year: {{ profile.academic_year }}</p>
+        {% endif %}
+        {% if profile.department %}
+          <p class="mb-1 text-muted">Department: {{ profile.department }}</p>
+        {% endif %}
+        {% if profile.email %}
+          <p class="mb-0 text-muted">Email: {{ profile.email }}</p>
+        {% else %}
+          <p class="mb-0 text-muted">Email: {{ profile.user.email }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-md-6">
+        <h2 class="h5 mb-3">Edit profile</h2>
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          <div class="mb-3">
+            <label for="{{ form.academic_year.id_for_label }}" class="form-label">Academic year</label>
+            {{ form.academic_year }}
+            {% if form.academic_year.errors %}
+              <div class="text-danger small">
+                {{ form.academic_year.errors }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.department.id_for_label }}" class="form-label">Department</label>
+            {{ form.department }}
+            {% if form.department.errors %}
+              <div class="text-danger small">
+                {{ form.department.errors }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}" class="form-label">Contact email</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+              <div class="text-danger small">
+                {{ form.email.errors }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.icon.id_for_label }}" class="form-label">Profile picture</label>
+            {{ form.icon }}
+            {% if form.icon.errors %}
+              <div class="text-danger small">
+                {{ form.icon.errors }}
+              </div>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Save profile
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

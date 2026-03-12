@@ -4,8 +4,8 @@ from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.shortcuts import render, redirect  
-from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm
-from guide.models import Category, CollectionList, News, Post
+from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm, UserProfileForm
+from guide.models import Category, CollectionList, News, Post, UserProfile
 from django.http import JsonResponse
 
 from guide.forms import (
@@ -14,6 +14,7 @@ from guide.forms import (
     EmailLoginForm,
     PostForm,
     RegisterForm,
+    UserProfileForm,
 )
 
 def index(request):
@@ -64,6 +65,29 @@ def login_view(request):
 def user_logout(request):
     logout(request)
     return redirect('guide:index')
+
+
+@login_required
+def profile_view(request):
+    profile, _created = UserProfile.objects.get_or_create(
+        user=request.user,
+        defaults={"email": request.user.email or ""},
+    )
+    if request.method == "POST":
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect("guide:profile")
+    else:
+        form = UserProfileForm(instance=profile)
+    return render(
+        request,
+        "guide/profile.html",
+        {
+            "profile": profile,
+            "form": form,
+        },
+    )
 
 def post_list(request):
     q = request.GET.get('q', '').strip()
