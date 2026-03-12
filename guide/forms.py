@@ -28,6 +28,8 @@ class RegisterForm(forms.Form):
         email = self.cleaned_data.get('email', '').strip().lower()
         if not email:
             raise forms.ValidationError('Email is required.')
+        if not email.endswith('@student.gla.ac.uk'):
+            raise forms.ValidationError('Only @student.gla.ac.uk email addresses are allowed for registration.')
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError('A user with this email already exists.')
         return email
