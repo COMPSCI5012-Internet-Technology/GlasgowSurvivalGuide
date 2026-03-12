@@ -98,8 +98,10 @@ class PostForm(forms.ModelForm):
             "category",
             "tags",
             "image",
+            "audio",
+            "video",
             "status",
-            'image_description',
+            "image_description",
         )
         widgets = {
             "title": forms.TextInput(attrs={"placeholder": "Enter post title"}),
@@ -111,9 +113,13 @@ class PostForm(forms.ModelForm):
             ),
             "address": forms.TextInput(attrs={"placeholder": "Search location..."}),
             "rating": forms.NumberInput(attrs={"min": 0, "max": 5}),
+            "audio": forms.URLInput(attrs={"placeholder": "https://example.com/audio.mp3"}),
+            "video": forms.URLInput(attrs={"placeholder": "https://youtu.be/your-video-id or https://example.com/video.mp4"}),
         }
         labels = {
             "address": "Location",
+            "audio": "Audio link (optional)",
+            "video": "Video link (optional)",
             "status": "Public (visible to everyone)",
         }
 
