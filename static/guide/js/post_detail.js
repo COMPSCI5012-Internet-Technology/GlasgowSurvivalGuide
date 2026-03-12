@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    // Get CSRF token from the hidden input rendered by {% csrf_token %}
+    
     var csrftoken = $('input[name=csrfmiddlewaretoken]').val();
 
     $('#ajax-like-btn').click(function(e) {
