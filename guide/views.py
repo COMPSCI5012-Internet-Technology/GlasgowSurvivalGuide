@@ -16,6 +16,7 @@ from guide.forms import (
     RegisterForm,
     UserProfileForm,
 )
+from guide.utils import get_video_embed
 
 def index(request):
    return redirect('guide:post_list')
@@ -221,6 +222,11 @@ def post_detail(request, pk):
             post.in_collections.filter(owner=request.user).values_list('pk', flat=True)
         )
 
+    video_embed_url = None
+    video_use_iframe = False
+    if post.video and post.video.strip():
+        video_embed_url, video_use_iframe = get_video_embed(post.video)
+
     return render(
         request,
         'guide/post_detail.html',
@@ -232,6 +238,8 @@ def post_detail(request, pk):
             'is_saved': is_saved,
             'user_collections': user_collections,
             'collection_ids_containing_post': collection_ids_containing_post,
+            'video_embed_url': video_embed_url,
+            'video_use_iframe': video_use_iframe,
         },
     )
 

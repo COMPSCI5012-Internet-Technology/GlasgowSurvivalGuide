@@ -30,6 +30,28 @@
     </div>
     {% endif %}
 
+    {% if video_embed_url %}
+    <section class="mb-4" aria-label="Video">
+        {% if video_use_iframe %}
+        <div class="ratio ratio-16x9 mb-3">
+            <iframe src="{{ video_embed_url }}" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen class="rounded shadow-sm"></iframe>
+        </div>
+        {% else %}
+        <video controls preload="metadata" class="w-100 rounded shadow-sm" src="{{ video_embed_url }}" title="Video">
+            <p>Your browser does not support the video tag.</p>
+        </video>
+        {% endif %}
+    </section>
+    {% endif %}
+
+    {% if post.audio %}
+    <section class="mb-4" aria-label="Audio">
+        <audio controls preload="metadata" class="w-100" src="{{ post.audio }}" title="Audio">
+            <p>Your browser does not support the audio tag.</p>
+        </audio>
+    </section>
+    {% endif %}
+
     {% if user.is_authenticated %}
     <div class="d-flex gap-2 mb-5">
         {% csrf_token %}
