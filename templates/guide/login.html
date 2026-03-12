@@ -1,34 +1,35 @@
-{% extends 'guide/auth_base.html' %}
-{% block title %}Login – Glasgow Survival Guide{% endblock %}
-{% block auth_tabs %}
-  <h1 class="auth-tab active" style="margin:0;flex:1;font-size:16px;font-weight:600;">Login</h1>
-  <a href="{% url 'guide:register' %}" class="auth-tab inactive">Register</a>
-{% endblock %}
-{% block card_content %}
-  <form method="post" action="{% url 'guide:login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">
-    {% csrf_token %}
-    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-    {% if form.non_field_errors %}
-      <ul class="errorlist">{{ form.non_field_errors }}</ul>
-    {% endif %}
-    <div class="field">
-      <label for="id_email">UofG Email</label>
-      <p id="email-hint" class="hint">Please use your @gla.ac.uk address</p>
-      <input type="email" name="email" id="id_email" value="{{ form.email.value|default:'' }}" placeholder="email@gla.ac.uk" aria-describedby="email-hint" autocomplete="email" required>
-      {% if form.email.errors %}
-        <ul class="errorlist">{{ form.email.errors }}</ul>
-      {% endif %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container d-flex justify-content-center">
+    <div class="auth-container">
+        
+        <div class="auth-tabs">
+            <a href="{% url 'guide:login' %}" class="auth-tab active">Login</a>
+            <a href="{% url 'guide:register' %}" class="auth-tab">Register</a>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div>
+                <label class="auth-label">UofG Email</label>
+                <span class="auth-sub-label">Please use your @gla.ac.uk address</span>
+                {{ form.email }}
+            </div>
+
+            <div>
+                <label class="auth-label">Password</label>
+                {{ form.password }}
+            </div>
+
+            <a href="#" class="forget-pwd-link">Forget password ?</a>
+
+            <button type="submit" class="auth-btn-primary">
+                Login
+            </button>
+        </form>
     </div>
-    <div class="field">
-      <label for="id_password">Password</label>
-      <input type="password" name="password" id="id_password" autocomplete="current-password" required>
-      {% if form.password.errors %}
-        <ul class="errorlist">{{ form.password.errors }}</ul>
-      {% endif %}
-    </div>
-    <div class="forgot-wrap">
-      <a href="#" class="forgot">Forget password ?</a>
-    </div>
-    <button type="submit" class="btn-submit">Login</button>
-  </form>
+</div>
 {% endblock %}

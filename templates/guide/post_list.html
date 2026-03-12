@@ -1,34 +1,154 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Posts – Glasgow Survival Guide{% endblock %}
+
 {% block content %}
-<h1>Posts</h1>
-<form method="get" action="{% url 'guide:post_list' %}">
-  <label for="id_q">Search</label>
-  <input type="text" name="q" id="id_q" value="{{ q }}" placeholder="Search posts...">
-  <label for="id_category">Category</label>
-  <select name="category" id="id_category">
-    <option value="">All categories</option>
-    {% for cat in categories %}
-    <option value="{{ cat.id }}" {% if category_id == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
-    {% endfor %}
-  </select>
-  <label for="id_sort">Sort</label>
-  <select name="sort" id="id_sort">
-    <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest first</option>
-    <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest first</option>
-  </select>
-  <button type="submit">Apply</button>
-</form>
-{% if user.is_authenticated %}
-<p><a href="{% url 'guide:post_create' %}">New post</a></p>
-{% endif %}
-{% if post_list %}
-<ul>
-  {% for post in post_list %}
-  <li><a href="{% url 'guide:post_detail' pk=post.pk %}">{{ post.title }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>No posts yet.</p>
-{% endif %}
+<div class="container mt-4 mb-4 flex-grow-1 d-flex flex-column post-list-wrapper">
+   <div class="bg-white bg-opacity-75 rounded-3 p-4 shadow-sm flex-grow-1">
+
+        <div class="border rounded p-3 mb-4 bg-white shadow-sm">
+            <p class="text-secondary mb-2 fw-bold">What's on your mind?</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'guide:post_create' %}" class="btn btn-primary w-100 text-start shadow-sm">
+                    + Share your thoughts on a new post..
+                </a>
+            {% else %}
+                <a href="{% url 'guide:login' %}" class="btn btn-primary w-100 text-start shadow-sm">
+                    + Log in to share a post..
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="mb-3 d-flex justify-content-end">
+            <form method="get" action="{% url 'guide:post_list' %}" class="m-0">
+                <input type="hidden" name="category" value="{{ category_id }}"> 
+                <input type="hidden" name="q" value="{{ q }}"> 
+
+                <select id="sort-select" name="sort" class="form-select form-select-sm w-auto shadow-sm border-secondary sort-select-custom" aria-label="Sort posts by date">
+                    <option value="newest" {% if sort == "newest" %}selected{% endif %}>Sort by: Newest</option>
+                    <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Sort by: Oldest</option>
+                </select>
+            </form>
+        </div>
+
+        <hr class="text-secondary opacity-25 mb-4">
+
+        <div class="row">
+            
+           <div class="col-md-3">
+                <h2 class="fs-5 fw-bold mb-3">Categories</h2>
+                <div class="list-group list-group-flush mb-4 bg-transparent">
+                    
+                    <a href="{% url 'guide:post_list' %}?q={{ q }}&sort={{ sort }}" 
+                       class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-1 {% if not category_id %}fw-bold text-primary{% else %}text-dark{% endif %}">
+                        ALL
+                    </a>
+
+                    {% for main_cat, sub_cats in grouped_categories.items %}
+                        {% if main_cat == "General" %}
+                            {% for cat in sub_cats %}
+                            <a href="{% url 'guide:post_list' %}?category={{ cat.id }}&q={{ q }}&sort={{ sort }}" 
+                               class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-1 {% if category_id == cat.id|stringformat:'s' %}fw-bold text-primary{% else %}text-dark{% endif %}">
+                                {{ cat.name }}
+                            </a>
+                            {% endfor %}
+                        {% else %}
+                            <div class="list-group-item bg-transparent border-0 fw-bold px-2 py-1 mt-2 text-dark">
+                                {{ main_cat }}
+                            </div>
+                            {% for cat in sub_cats %}
+                            <a href="{% url 'guide:post_list' %}?category={{ cat.id }}&q={{ q }}&sort={{ sort }}" 
+                               class="list-group-item list-group-item-action bg-transparent border-0 ps-4 py-1 {% if category_id == cat.id|stringformat:'s' %}fw-bold text-primary{% else %}text-secondary{% endif %}">
+                                {{ cat.name }}
+                            </a>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-6 border-start border-end px-4">
+                {% for post in post_list %}
+                    <div class="card mb-5 border-0 shadow-sm rounded-3 overflow-hidden mx-auto post-card-list">
+                        
+                        {% if post.image %}
+                            <div class="post-img-frame">
+                                <img src="{{ post.image.url }}" class="w-100 h-100 post-img-fit" alt="{{ post.image_description|default:post.title }}">
+                            </div>
+                        {% endif %}
+
+                        <div class="card-body p-4">
+                            <div class="mb-2">
+                                <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary px-3 py-2">
+                                    {{ post.category.name }}
+                                </span>
+                            </div>
+
+                            <h3 class="card-title fw-bold mb-3">
+                                <a href="{% url 'guide:post_detail' post.pk %}" class="text-decoration-none text-dark">
+                                    {{ post.title }}
+                                </a>
+                            </h3>
+
+                            <p class="card-text text-secondary mb-4 post-list-desc">
+                                {{ post.description|truncatewords:30 }}
+                            </p>
+
+                            <div class="pt-3 border-top d-flex flex-wrap justify-content-between align-items-center">
+                                <div class="text-muted small">
+                                    <i class="bi bi-person"></i> <strong>Author:</strong> {{ post.author.username|truncatechars:15 }}
+                                </div>
+                                <div class="text-muted small">
+                                    <i class="bi bi-calendar"></i> <strong>Posted:</strong> {{ post.created_at|date:"d M Y" }}
+                                </div>
+                                <div class="mt-2 w-100 d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <span class="text-warning fw-bold me-2">Rating:</span>
+                                        <span class="badge bg-warning text-dark">{{ post.rating }} / 5</span>
+                                    </div>
+                                    <div class="text-muted small fw-bold">
+                                        <span class="me-3">liked: {{ post.liked_by.count }}</span>
+                                        <span>comments: {{ post.comments.count }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="text-center py-5 text-muted">
+                        <p>No posts yet. Be the first to post!</p>
+                    </div>
+                {% endfor %}
+            </div> 
+
+            <div class="col-md-3">
+                <h2 class="fs-5 fw-bold mb-3 border-bottom pb-2 border-dark">LOCAL NEWS</h2>
+                <div class="bg-white p-3 rounded border shadow-sm">
+                    {% if recent_news %}
+                        <ul class="list-unstyled mb-0">
+                        {% for news in recent_news %}
+                            <li class="mb-3 border-bottom pb-2">
+                                <h3 class="h6 fw-bold mb-1 text-dark">{{ news.title }}</h3>
+                                <div class="text-muted news-date-text">
+                                    {{ news.time|date:"M d, Y" }}
+                                </div>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                        <div class="mt-3 text-center">
+                            <a href="{% url 'guide:news_list' %}" class="btn btn-sm btn-outline-primary w-100">
+                                Read All News &rarr;
+                            </a>
+                        </div>
+                    {% else %}
+                        <p class="small text-secondary mb-0">No news right now.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div> 
+    </div>
+</div>
+<script src="{% static 'guide/js/post_list.js' %}"></script>
 {% endblock %}

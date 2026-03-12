@@ -97,6 +97,7 @@ class PostForm(forms.ModelForm):
             "tags",
             "image",
             "status",
+            'image_description',
         )
         widgets = {
             "title": forms.TextInput(attrs={"placeholder": "Enter post title"}),

@@ -1,23 +1,97 @@
 {% extends 'base.html' %}
-{% block title %}New Post – Glasgow Survival Guide{% endblock %}
+{% load static %}
+
+{% block title %}Create New Post – Glasgow Survival Guide{% endblock %}
+
 {% block content %}
-<h1>New Post</h1>
-<form method="post" action="{% url 'guide:post_create' %}" enctype="multipart/form-data">
-  {% csrf_token %}
-  {% if form.non_field_errors %}
-    <ul class="errorlist">{{ form.non_field_errors }}</ul>
-  {% endif %}
-  {% for field in form %}
-    <div class="field">
-      <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}*{% endif %}</label>
-      {{ field }}
-      {% if field.help_text %}<p class="helptext">{{ field.help_text }}</p>{% endif %}
-      {% if field.errors %}<ul class="errorlist">{{ field.errors }}</ul>{% endif %}
+<div class="container mt-4 mb-4 flex-grow-1 d-flex flex-column align-items-center">
+    
+    <div class="bg-white bg-opacity-75 rounded-3 p-4 p-md-5 shadow-sm w-100 post-form-card">
+        
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger p-2 small">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="mb-4">
+                <a href="{% url 'guide:post_list' %}" class="text-decoration-none text-secondary fw-bold">
+                    &larr; Back
+                </a>
+            </div>
+
+            <div class="mb-4 text-center">
+                <h2 class="h5 fw-bold mb-3 text-dark">Upload</h2>
+                <div class="border border-2 border-secondary border-opacity-25 rounded-3 p-4 bg-light shadow-sm upload-zone-dashed">
+                    <p class="small text-secondary fw-bold mb-3">Image/Video</p>
+                    <input type="file" name="image" class="form-control form-control-sm mx-auto w-75 mb-3" id="id_image">
+
+                    <div class="text-start mx-auto w-75">
+                        <label for="id_image_description" class="form-label small fw-bold text-dark mb-1">
+                            Image Description (Optional)
+                        </label>
+                        <input type="text" name="image_description" class="form-control form-control-sm border-secondary" id="id_image_description" placeholder="Image description...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.category.id_for_label }}" class="form-label fw-bold small text-dark">Category (Optional)</label>
+                <select name="category" class="form-select bg-light border-0 shadow-sm" id="id_category" required>
+                    {% for group, options in grouped_categories.items %}
+                        <optgroup label="{{ group }}">
+                            {% for cat in options %}
+                                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.title.id_for_label }}" class="form-label fw-bold small text-dark">Title*</label>
+                <input type="text" name="title" class="form-control bg-light border-0 shadow-sm" id="id_title" placeholder="Enter post title" required>
+                {% if form.title.errors %}
+                    <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                {% endif %}
+            </div>
+
+             <div class="mb-4">
+                <label for="id_rating" class="form-label fw-bold small text-dark">Rating*</label>
+                <select name="rating" class="form-select bg-light border-0 shadow-sm" id="id_rating" required>
+                    <option value="" selected disabled>Select a rating (1-5 stars)</option>
+                    <option value="5">⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+                    <option value="4">⭐⭐⭐⭐ (4 - Good)</option>
+                    <option value="3">⭐⭐⭐ (3 - Average)</option>
+                    <option value="2">⭐⭐ (2 - Poor)</option>
+                    <option value="1">⭐ (1 - Terrible)</option>
+                </select>
+                {% if form.rating.errors %}
+                    <div class="text-danger small mt-1">{{ form.rating.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.description.id_for_label }}" class="form-label fw-bold small text-dark">Description*</label>
+                <textarea name="description" class="form-control bg-light border-0 shadow-sm" id="id_description" rows="5" placeholder="Write a description for your post..." required></textarea>
+            </div>
+
+           <div class="mb-4 d-flex justify-content-end">
+                <div class="form-check">
+                    <input type="checkbox" name="status" class="form-check-input border-secondary" id="id_status" checked>
+                    <label class="form-check-label small fw-bold text-dark" for="id_status">Public (everyone can see)</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+                Post
+            </button>
+
+        </form>
+        
     </div>
-  {% endfor %}
-  <div class="field">
-    <button type="submit">Post</button>
-  </div>
-</form>
-<p><a href="{% url 'guide:post_list' %}">Back to posts</a></p>
+</div>
 {% endblock %}

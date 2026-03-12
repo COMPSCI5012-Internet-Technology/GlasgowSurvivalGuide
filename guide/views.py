@@ -1,11 +1,12 @@
-from django.contrib.auth import login
+from django.contrib.auth import login,logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-
+from django.shortcuts import render, redirect  
 from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm
 from guide.models import Category, CollectionList, News, Post
+from django.http import JsonResponse
 
 from guide.forms import (
     CollectionCreateForm,
@@ -16,7 +17,7 @@ from guide.forms import (
 )
 
 def index(request):
-    return render(request, 'guide/index.html')
+   return redirect('guide:post_list')
 
 
 def news_list(request):
@@ -60,6 +61,9 @@ def login_view(request):
         form = EmailLoginForm()
     return render(request, 'guide/login.html', {'form': form, 'next': next_url})
 
+def user_logout(request):
+    logout(request)
+    return redirect('guide:index')
 
 def post_list(request):
     q = request.GET.get('q', '').strip()
@@ -91,6 +95,21 @@ def post_list(request):
         post_list_qs = post_list_qs.order_by('-created_at')
 
     categories = Category.objects.all().order_by('name')
+    grouped_categories = {}
+    for cat in categories:
+        if " - " in cat.name:
+            main_cat, sub_cat = cat.name.split(" - ", 1)
+        else:
+            main_cat = "General"
+            sub_cat = cat.name
+        if main_cat not in grouped_categories:
+            grouped_categories[main_cat] = []
+            
+        grouped_categories[main_cat].append({
+            'id': cat.id,
+            'name': sub_cat  
+        })
+    recent_news = News.objects.all().order_by('-time')[:5]
     return render(
         request,
         'guide/post_list.html',
@@ -100,12 +119,30 @@ def post_list(request):
             'categories': categories,
             'category_id': category_id,
             'sort': sort,
+            'recent_news': recent_news,
+            'grouped_categories': grouped_categories,
         },
     )
 
 
 @login_required
 def post_create(request):
+    categories = Category.objects.all().order_by('name')
+    grouped_categories = {}
+    for cat in categories:
+        if " - " in cat.name:
+            main_cat, sub_cat = cat.name.split(" - ", 1)
+        else:
+            main_cat = "General"
+            sub_cat = cat.name
+            
+        if main_cat not in grouped_categories:
+            grouped_categories[main_cat] = []
+            
+        grouped_categories[main_cat].append({
+            'id': cat.id,
+            'name': sub_cat
+        })
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -113,10 +150,17 @@ def post_create(request):
             post.author = request.user
             post.save()
             form.save_m2m()
-            return redirect('guide:post_detail', pk=post.pk)
+            return redirect('guide:post_list')
     else:
         form = PostForm()
-    return render(request, 'guide/post_form.html', {'form': form})
+    return render(
+        request, 
+        'guide/post_form.html', 
+        {
+            'form': form,
+            'grouped_categories': grouped_categories 
+        }
+    )
 
 
 def post_detail(request, pk):
@@ -173,14 +217,16 @@ def post_like(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if not post.status and request.user != post.author:
         raise Http404
+        
+    is_liked = False
     if post.liked_by.filter(pk=request.user.pk).exists():
         post.liked_by.remove(request.user)
+        is_liked = False
     else:
         post.liked_by.add(request.user)
-    next_url = request.GET.get('next') or request.POST.get('next')
-    if next_url:
-        return redirect(next_url)
-    return redirect('guide:post_detail', pk=post.pk)
+        is_liked = True
+        
+    return JsonResponse({'is_liked': is_liked, 'likes_count': post.liked_by.count()})
 
 
 @login_required
@@ -188,14 +234,16 @@ def post_save(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if not post.status and request.user != post.author:
         raise Http404
+        
+    is_saved = False
     if post.saved_by.filter(pk=request.user.pk).exists():
         post.saved_by.remove(request.user)
+        is_saved = False
     else:
         post.saved_by.add(request.user)
-    next_url = request.GET.get('next') or request.POST.get('next')
-    if next_url:
-        return redirect(next_url)
-    return redirect('guide:post_detail', pk=post.pk)
+        is_saved = True
+        
+    return JsonResponse({'is_saved': is_saved})
 
 
 @login_required

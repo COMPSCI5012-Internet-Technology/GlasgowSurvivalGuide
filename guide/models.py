@@ -28,6 +28,7 @@ class Post(models.Model):
     address = models.CharField(max_length=256, blank=True, default="")
     rating = models.PositiveSmallIntegerField(default=0)
     image = models.ImageField(upload_to="post_images/", blank=True, null=True)
+    image_description = models.CharField(max_length=255, blank=True, null=True, help_text="Image description")
     audio = models.URLField(blank=True, default="")
     video = models.URLField(blank=True, default="")
     status = models.BooleanField(default=True)
@@ -61,9 +62,12 @@ class Post(models.Model):
         related_name="posts",
         blank=True,
     )
-
+    class Meta:
+        ordering = ['-created_at']
+        
     def __str__(self) -> str:
         return self.title
+    
 
 
 class Comment(models.Model):
