@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from django.utils import timezone
 
-from guide.models import Category, CollectionList, Comment, News, Post, Tag
+from guide.models import Category, CollectionList, Comment, News, Post, Tag, UserProfile
 from guide.services.news_service import get_news_for_daily_fetch
 
 
@@ -69,3 +69,9 @@ class NewsAdmin(admin.ModelAdmin):
     list_filter = ("time",)
     search_fields = ("title", "content",)
     actions = [fetch_news_action]
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ("user", "academic_year", "department", "email")
+    search_fields = ("user__username", "user__email", "department", "academic_year")

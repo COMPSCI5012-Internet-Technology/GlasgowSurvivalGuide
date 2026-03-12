@@ -5,6 +5,25 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="profile",
+    )
+    academic_year = models.CharField(max_length=20)
+    department = models.CharField(max_length=20)
+    email = models.EmailField(max_length=120)
+    icon = models.ImageField(
+        upload_to="profile_icons/",
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self) -> str:
+        return f"Profile of {self.user.username}"
+
+
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
     main = models.CharField(max_length=64)
