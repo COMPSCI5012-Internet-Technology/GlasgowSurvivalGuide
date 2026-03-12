@@ -28,71 +28,55 @@
 
     {% if post.image %}
     <div class="text-center mb-4">
-        <img src="{{ post.image.url }}" class="img-fluid rounded shadow-sm post-detail-image">
+        <img src="{{ post.image.url }}" alt="{{ post.image_description|default:post.title }}" class="img-fluid rounded shadow-sm post-detail-image">
     </div>
     {% endif %}
 
     <div class="d-flex gap-2 mb-5">
         {% if user.is_authenticated %}
-            <button id="ajax-like-btn" data-url="{% url 'guide:post_like' post.pk %}" class="btn {% if is_liked %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4 fw-bold">Like</button>
-            <button id="ajax-save-btn" data-url="{% url 'guide:post_save' post.pk %}" class="btn {% if is_saved %}btn-secondary{% else %}btn-outline-secondary{% endif %} btn-sm px-4 fw-bold">Save</button>
+            <button id="ajax-like-btn" data-url="{% url 'guide:post_like' post.pk %}" class="btn {% if is_liked %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4 fw-bold" aria-label="{% if is_liked %}Unlike this post{% else %}Like this post{% endif %}">{% if is_liked %}Unlike{% else %}Like{% endif %}</button>
+            <button id="ajax-save-btn" data-url="{% url 'guide:post_save' post.pk %}" class="btn {% if is_saved %}btn-secondary{% else %}btn-outline-secondary{% endif %} btn-sm px-4 fw-bold" aria-label="{% if is_saved %}Unsave this post{% else %}Save this post{% endif %}">{% if is_saved %}Unsave{% else %}Save{% endif %}</button>
         {% endif %}
     </div>
 
     <section class="mt-5 border-top pt-4">
-        <h3 class="h5 fw-bold mb-4">Comments</h3>
-        <section class="mt-5 border-top pt-4">
-    <h3 class="h5 fw-bold mb-4">Comments</h3>
-    
-    {% if user.is_authenticated %}
-        <form id="comment_form" method="post" action="{% url 'guide:post_detail' post.pk %}" class="mb-4" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <div class="mb-3">
-                {{ comment_form.as_p }}
-            </div>
-            
-            <button type="submit" name="comment_form" value="true" class="btn btn-primary btn-sm px-4 fw-bold shadow-sm">
-                Post Comment
-            </button>
-        </form>
-    {% else %}
-        <p class="small text-muted mb-4">
-            Please <a href="{% url 'guide:login' %}?next={{ request.path }}">log in</a> to leave a comment.
-        </p>
-    {% endif %}
+        <h2 class="h5 fw-bold mb-4">Comments</h2>
 
-    <div class="comment-list">
-        {% if comment_list %}
-            {% for comment in comment_list %}
-                <div class="mb-3 pb-3 border-bottom">
-                    <div class="d-flex justify-content-between small mb-1">
-                        <span class="fw-bold text-primary">{{ comment.author.username }}</span>
-                        <span class="text-muted">{{ comment.created_at|date:"d M Y H:i" }}</span>
-                    </div>
-                    <p class="mb-2 small text-dark">{{ comment.content }}</p>
-                    {% if comment.image %}
-                        <div class="mt-2">
-                            <img src="{{ comment.image.url }}" alt="Comment image" class="comment-thumbnail">
-                        </div>
-                    {% endif %}
+        {% if user.is_authenticated %}
+            <form id="comment_form" method="post" action="{% url 'guide:post_detail' post.pk %}" class="mb-4" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ comment_form.as_p }}
                 </div>
-            {% endfor %}
+                <button type="submit" name="comment_form" value="true" class="btn btn-primary btn-sm px-4 fw-bold shadow-sm">
+                    Post Comment
+                </button>
+            </form>
         {% else %}
-            <p class="text-muted small">No comments yet. Be the first to say something!</p>
+            <p class="small text-muted mb-4">
+                Please <a href="{% url 'guide:login' %}?next={{ request.path }}">log in</a> to leave a comment.
+            </p>
         {% endif %}
-    </div>
-</section>
+
         <div class="comment-list">
-            {% for comment in comment_list %}
-                <div class="mb-3 pb-3 border-bottom">
-                    <p class="mb-1 small"><strong>{{ comment.author.username }}</strong> · {{ comment.created_at|date:"d M Y" }}</p>
-                    <p class="mb-2">{{ comment.content }}</p>
-                    {% if comment.image %}
-                        <img src="{{ comment.image.url }}" class="comment-thumbnail">
-                    {% endif %}
-                </div>
-            {% endfor %}
+            {% if comment_list %}
+                {% for comment in comment_list %}
+                    <div class="mb-3 pb-3 border-bottom">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="fw-bold text-primary">{{ comment.author.username }}</span>
+                            <span class="text-muted">{{ comment.created_at|date:"d M Y H:i" }}</span>
+                        </div>
+                        <p class="mb-2 small text-dark">{{ comment.content }}</p>
+                        {% if comment.image %}
+                            <div class="mt-2">
+                                <img src="{{ comment.image.url }}" alt="Comment image" class="comment-thumbnail">
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted small">No comments yet. Be the first to say something!</p>
+            {% endif %}
         </div>
     </section>
 

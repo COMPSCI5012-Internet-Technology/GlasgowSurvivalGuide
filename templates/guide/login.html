@@ -1,60 +1,35 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block nav_user_links %}
-{% endblock %}
-
-{% block title %}Log In – Glasgow Survival Guide{% endblock %}
-
 {% block content %}
-<div class="container flex-grow-1 d-flex justify-content-center align-items-center mt-4 mb-5">
-    <div class="bg-white rounded-3 shadow p-4 p-sm-5 w-100" style="max-width: 500px;">
-        <div class="d-flex border-bottom mb-4 text-center">
-            <a href="{% url 'guide:login' %}" class="w-50 text-decoration-none fw-bold text-dark border-bottom border-primary border-3 pb-3">
-                Login
-            </a>
-            <a href="{% url 'guide:register' %}" class="w-50 text-decoration-none text-secondary pb-3">
-                Register
-            </a>
-          </div>
-        <form method="post" action="">
+<div class="container d-flex justify-content-center">
+    <div class="auth-container">
+        
+        <div class="auth-tabs">
+            <a href="{% url 'guide:login' %}" class="auth-tab active">Login</a>
+            <a href="{% url 'guide:register' %}" class="auth-tab">Register</a>
+        </div>
+
+        <form method="post">
             {% csrf_token %}
             
-            <input type="hidden" name="next" value="{{ next }}">
-
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger p-2 small text-center">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
-            <div class="mb-4">
-                <label for="id_email" class="form-label fw-bold small text-dark mb-1">UofG Email</label>
-                <div class="form-text text-secondary mt-0 mb-2" style="font-size: 0.75rem;">Please use your @gla.ac.uk address</div>
-                <input type="email" name="email" class="form-control border-secondary border-opacity-25" id="id_email" placeholder="email@gla.ac.uk" required>                
-                {% if form.email.errors %}
-                    <div class="text-danger small mt-1">{{ form.email.errors }}</div>
-                {% endif %}
+            <div>
+                <label class="auth-label">UofG Email</label>
+                <span class="auth-sub-label">Please use your @gla.ac.uk address</span>
+                {{ form.email }}
             </div>
 
-            <div class="mb-4">
-                <label for="id_password" class="form-label fw-bold small text-dark mb-1">Password</label>
-                <input type="password" name="password" class="form-control border-secondary border-opacity-25" id="id_password" required>
-                
-                {% if form.password.errors %}
-                    <div class="text-danger small mt-1">{{ form.password.errors }}</div>
-                {% endif %}
-                
-                <div class="text-end mt-2">
-                    <a href="#" class="text-decoration-none text-secondary" style="font-size: 0.8rem;">Forget password ?</a>
-                </div>
+            <div>
+                <label class="auth-label">Password</label>
+                {{ form.password }}
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+            <a href="#" class="forget-pwd-link">Forget password ?</a>
+
+            <button type="submit" class="auth-btn-primary">
                 Login
             </button>
-            
         </form>
-        
     </div>
 </div>
 {% endblock %}

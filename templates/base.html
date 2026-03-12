@@ -17,14 +17,14 @@
              alt="Glasgow University buildings' picture">
     </div>
 
-    <nav class="navbar bg-white shadow-sm px-3">
+    <nav class="navbar bg-white shadow-sm px-3" aria-label="Main navigation">
         <span class="navbar-brand fw-bold mb-0" >
             Glasgow Survival Guidance
         </span>
 
-        <form class="d-flex" method="get" action="{% url 'guide:post_list' %}">
+        <form class="d-flex" method="get" action="{% url 'guide:post_list' %}" role="search" aria-label="Search posts">
             <input class="form-control" type="text" name="q"
-                   placeholder="Search" >
+                   placeholder="Search" aria-label="Search posts">
         </form>
 
         <div class="d-flex align-items-center gap-3">
@@ -46,7 +46,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-white text-center py-2 mt-auto shadow-sm" style="font-size: 12px; color: #6b7280;">
+    <footer class="bg-white text-center py-2 mt-auto shadow-sm site-footer">
         &copy; 2026 Glasgow Survival Guide. All rights reserved.
         <a href="{% url 'guide:about' %}">About us</a>
     </footer>
