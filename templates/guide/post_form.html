@@ -78,6 +78,30 @@
                 <textarea name="description" class="form-control bg-light border-0 shadow-sm" id="id_description" rows="5" placeholder="Write a description for your post..." required></textarea>
             </div>
 
+            <div class="mb-4">
+                <label for="id_address" class="form-label fw-bold small text-dark">Location (Optional)</label>
+                <input type="text" name="address" class="form-control bg-light border-0 shadow-sm" id="id_address" placeholder="Search location..." value="{{ form.address.value|default:'' }}">
+                {% if form.address.errors %}
+                    <div class="text-danger small mt-1">{{ form.address.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <label for="id_audio" class="form-label fw-bold small text-dark">Audio link (Optional)</label>
+                <input type="url" name="audio" class="form-control bg-light border-0 shadow-sm" id="id_audio" placeholder="https://example.com/audio.mp3" value="{{ form.audio.value|default:'' }}">
+                {% if form.audio.errors %}
+                    <div class="text-danger small mt-1">{{ form.audio.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <label for="id_video" class="form-label fw-bold small text-dark">Video link (Optional)</label>
+                <input type="url" name="video" class="form-control bg-light border-0 shadow-sm" id="id_video" placeholder="https://youtu.be/your-video-id or https://example.com/video.mp4" value="{{ form.video.value|default:'' }}">
+                {% if form.video.errors %}
+                    <div class="text-danger small mt-1">{{ form.video.errors }}</div>
+                {% endif %}
+            </div>
+
            <div class="mb-4 d-flex justify-content-end">
                 <div class="form-check">
                     <input type="checkbox" name="status" class="form-check-input border-secondary" id="id_status" checked>
