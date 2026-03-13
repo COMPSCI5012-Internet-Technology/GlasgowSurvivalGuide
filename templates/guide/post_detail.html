@@ -73,6 +73,58 @@
     </div>
     {% endif %}
 
+    {% if user.is_authenticated and user_collections %}
+    <div class="mb-5 border-top pt-4">
+        <h2 class="h6 fw-bold mb-3">Add to collection</h2>
+        <div class="d-flex flex-wrap align-items-end gap-3">
+            <form id="add-to-collection-form" method="post" class="d-flex align-items-end gap-2 flex-wrap" data-collection-add-url="{% url 'guide:collection_add' collection_pk=user_collections.0.pk post_pk=post.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <label for="id_add_collection" class="form-label small mb-0 me-2">Collection</label>
+                <select name="collection_pk" id="id_add_collection" class="form-select form-select-sm" style="width: auto; min-width: 140px;" aria-label="Select collection to add this post to">
+                    <option value="">Select collection...</option>
+                    {% for col in user_collections %}
+                        {% if col.pk not in collection_ids_containing_post %}
+                        <option value="{{ col.pk }}">{{ col.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-outline-primary btn-sm">Add to collection</button>
+            </form>
+        </div>
+        {% if collection_ids_containing_post %}
+        <div class="mt-3">
+            <span class="small text-muted me-2">In collection:</span>
+            {% for col in user_collections %}
+                {% if col.pk in collection_ids_containing_post %}
+                <span class="d-inline-flex align-items-center gap-2 me-3 mb-2">
+                    <span class="small">{{ col.name }}</span>
+                    <form method="post" action="{% url 'guide:collection_remove' collection_pk=col.pk post_pk=post.pk %}" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Remove from list</button>
+                    </form>
+                </span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <script>
+    (function() {
+        var form = document.getElementById('add-to-collection-form');
+        if (!form) return;
+        var sel = form.querySelector('select[name="collection_pk"]');
+        var baseUrl = form.dataset.collectionAddUrl;
+        form.onsubmit = function() {
+            if (!sel.value) return false;
+            form.action = baseUrl.replace(/\/collections\/\d+\//, '/collections/' + sel.value + '/');
+            return true;
+        };
+    })();
+    </script>
+    {% endif %}
+
     <section class="mt-5 border-top pt-4">
         <h2 class="h5 fw-bold mb-4">Comments</h2>
 
