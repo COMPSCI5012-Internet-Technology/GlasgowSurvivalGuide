@@ -265,7 +265,7 @@ def post_like(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if not post.status and request.user != post.author:
         raise Http404
-        
+
     is_liked = False
     if post.liked_by.filter(pk=request.user.pk).exists():
         post.liked_by.remove(request.user)
@@ -273,8 +273,22 @@ def post_like(request, pk):
     else:
         post.liked_by.add(request.user)
         is_liked = True
-        
+
     return JsonResponse({'is_liked': is_liked, 'likes_count': post.liked_by.count()})
+
+
+@login_required
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if post.author != request.user:
+        raise Http404
+    if request.method == "POST":
+        post.delete()
+        next_url = request.POST.get("next") or request.GET.get("next")
+        if next_url:
+            return redirect(next_url)
+        return redirect("guide:post_list")
+    return redirect("guide:post_detail", pk=pk)
 
 
 @login_required

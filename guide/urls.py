@@ -15,6 +15,7 @@ urlpatterns = [
     path('posts/', views.post_list, name='post_list'),
     path('posts/new/', views.post_create, name='post_create'),
     path('posts/<int:pk>/like/', views.post_like, name='post_like'),
+    path('posts/<int:pk>/delete/', views.post_delete, name='post_delete'),
     path('posts/<int:pk>/', views.post_detail, name='post_detail'),
     path('users/<int:user_id>/collections/', views.user_public_collections, name='user_public_collections'),
     path('collections/', views.collection_list, name='collection_list'),
