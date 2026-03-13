@@ -346,18 +346,22 @@ def collection_detail(request, pk):
     )
 
 
-@login_required
 def user_public_collections(request, user_id):
     target_user = get_object_or_404(
         User.objects.select_related("profile"), pk=user_id
     )
+    target_profile = getattr(target_user, "profile", None)
     public_collections = CollectionList.objects.filter(
         owner_id=user_id, status=True
     ).order_by('name')
     return render(
         request,
         'guide/user_public_collections.html',
-        {'target_user': target_user, 'public_collections': public_collections},
+        {
+            'target_user': target_user,
+            'target_profile': target_profile,
+            'public_collections': public_collections,
+        },
     )
 
 

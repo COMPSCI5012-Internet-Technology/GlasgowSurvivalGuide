@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ target_user.username }}'s public collections – Glasgow Survival Guide{% endblock %}
+{% block title %}{{ target_user.username }} – profile & public collections – Glasgow Survival Guide{% endblock %}
 
 {% block content %}
 <div class="container mt-4 mb-4">
@@ -8,29 +8,76 @@
     <p class="mb-3">
       <a href="{% url 'guide:post_list' %}" class="text-decoration-none text-secondary fw-bold">&larr; Back to posts</a>
     </p>
-    <div class="d-flex align-items-center gap-3 mb-4">
-      {% if target_user.profile.icon %}
-        <img src="{{ target_user.profile.icon.url }}" alt="{{ target_user.username }} profile picture"
-             class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover;">
+
+    <header class="d-flex flex-column flex-md-row align-items-md-center gap-3 mb-4">
+      <div>
+        {% if target_profile and target_profile.icon %}
+          <img src="{{ target_profile.icon.url }}"
+               alt="{{ target_user.username }} profile picture"
+               class="rounded-circle"
+               style="width: 64px; height: 64px; object-fit: cover;">
+        {% else %}
+          <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white"
+               style="width: 64px; height: 64px;">
+            <span>
+              {% if target_user.username %}
+                {{ target_user.username|slice:":1"|upper }}
+              {% else %}
+                ?
+              {% endif %}
+            </span>
+          </div>
+        {% endif %}
+      </div>
+      <div>
+        <h1 class="h4 fw-bold mb-1">{{ target_user.username }}</h1>
+        <p class="mb-1 small text-muted">
+          <strong>Academic year:</strong>
+          {% if target_profile and target_profile.academic_year %}
+            {{ target_profile.academic_year }}
+          {% else %}
+            Not provided yet
+          {% endif %}
+        </p>
+        <p class="mb-1 small text-muted">
+          <strong>Department:</strong>
+          {% if target_profile and target_profile.department %}
+            {{ target_profile.department }}
+          {% else %}
+            Not provided yet
+          {% endif %}
+        </p>
+        <p class="mb-0 small text-muted">
+          <strong>Contact email:</strong>
+          {% if target_profile and target_profile.email %}
+            <a href="mailto:{% if target_profile and target_profile.email %}{{ target_profile.email }}{% endif %}">
+              {{ target_profile.email }}
+            </a>
+          {% elif target_user.email %}
+            <a href="mailto:{{ target_user.email }}">
+              {{ target_user.email }}
+            </a>
+          {% else %}
+            Not provided yet
+          {% endif %}
+        </p>
+      </div>
+    </header>
+
+    <section aria-label="Public collections">
+      <h2 class="h5 fw-bold mb-3">{{ target_user.username }}'s public collections</h2>
+      {% if public_collections %}
+        <ul class="list-unstyled">
+          {% for col in public_collections %}
+          <li class="mb-2">
+            <a href="{% url 'guide:collection_detail' pk=col.pk %}">{{ col.name }}</a>
+          </li>
+          {% endfor %}
+        </ul>
       {% else %}
-        <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white"
-             style="width: 48px; height: 48px;">
-          <span>{% if target_user.username %}{{ target_user.username|slice:":1"|upper }}{% else %}?{% endif %}</span>
-        </div>
+        <p class="text-muted mb-0">No public collections yet.</p>
       {% endif %}
-      <h1 class="h4 mb-0">{{ target_user.username }}'s public collections</h1>
-    </div>
-    {% if public_collections %}
-    <ul class="list-unstyled">
-      {% for col in public_collections %}
-      <li class="mb-2">
-        <a href="{% url 'guide:collection_detail' pk=col.pk %}">{{ col.name }}</a>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p class="text-muted mb-0">No public collections yet.</p>
-    {% endif %}
+    </section>
   </div>
 </div>
 {% endblock %}
