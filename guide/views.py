@@ -394,3 +394,15 @@ def collection_delete(request, pk):
         raise Http404
     collection.delete()
     return redirect('guide:collection_list')
+
+
+@login_required
+def collection_toggle_status(request, pk):
+    if request.method != 'POST':
+        return redirect('guide:collection_list')
+    collection = get_object_or_404(CollectionList, pk=pk)
+    if collection.owner != request.user:
+        raise Http404
+    collection.status = not collection.status
+    collection.save()
+    return redirect('guide:collection_list')

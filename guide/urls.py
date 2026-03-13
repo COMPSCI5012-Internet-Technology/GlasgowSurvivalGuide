@@ -23,6 +23,7 @@ urlpatterns = [
     path('collections/<int:collection_pk>/add/<int:post_pk>/', views.collection_add, name='collection_add'),
     path('collections/<int:collection_pk>/remove/<int:post_pk>/', views.collection_remove, name='collection_remove'),
     path('collections/<int:pk>/delete/', views.collection_delete, name='collection_delete'),
+    path('collections/<int:pk>/toggle-status/', views.collection_toggle_status, name='collection_toggle_status'),
     path('collections/<int:pk>/', views.collection_detail, name='collection_detail'),
     path('logout/', views.user_logout, name='logout'),
 ]
