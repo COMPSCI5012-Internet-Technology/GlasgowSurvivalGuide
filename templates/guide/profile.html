@@ -84,15 +84,10 @@
     <hr class="my-4">
 
     <!-- your content tabs -->
-    <h2 class="h5 fw-bold mb-3">Your content</h2>
+    <h2 class="h5 fw-bold mb-3">Your posts</h2>
     <ul class="nav nav-tabs mb-3">
       <li class="nav-item">
-        <a class="nav-link {% if active_tab == 'posts' %}active fw-bold{% endif %}"
-           href="{% url 'guide:profile' %}?tab=posts">Your Posts</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {% if active_tab == 'saved' %}active fw-bold{% endif %}"
-           href="{% url 'guide:profile' %}?tab=saved">Saved</a>
+        <span class="nav-link active fw-bold">Your Posts</span>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'guide:collection_list' %}">My Collections</a>
@@ -101,7 +96,7 @@
 
     <!-- post grid -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
-      {% for post in tab_posts %}
+      {% for post in user_posts %}
       <div class="col">
         <div class="card h-100 border shadow-sm">
           {% if post.image %}

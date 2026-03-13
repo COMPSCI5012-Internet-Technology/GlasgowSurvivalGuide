@@ -69,7 +69,6 @@
     <div class="d-flex gap-2 mb-5">
         {% csrf_token %}
         <button id="ajax-like-btn" data-url="{% url 'guide:post_like' post.pk %}" class="btn {% if is_liked %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4 fw-bold" aria-label="{% if is_liked %}Liked{% else %}Like this post{% endif %}">{% if is_liked %}Liked{% else %}Like{% endif %}</button>
-        <button id="ajax-save-btn" data-url="{% url 'guide:post_save' post.pk %}" class="btn {% if is_saved %}btn-secondary{% else %}btn-outline-secondary{% endif %} btn-sm px-4 fw-bold" aria-label="{% if is_saved %}Saved{% else %}Save this post{% endif %}">{% if is_saved %}Saved{% else %}Save{% endif %}</button>
     </div>
     {% endif %}
 

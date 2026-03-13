@@ -87,16 +87,6 @@ def profile_view(request):
     user_posts = Post.objects.filter(author=request.user).select_related(
         "author__profile", "category"
     ).order_by("-created_at")
-    saved_posts = request.user.saved_posts.all().select_related(
-        "author__profile", "category"
-    ).order_by("-created_at")
-
-    active_tab = (request.GET.get("tab") or "posts").strip()
-    if active_tab == "saved":
-        tab_posts = saved_posts
-    else:
-        active_tab = "posts"
-        tab_posts = user_posts
 
     return render(
         request,
@@ -105,9 +95,6 @@ def profile_view(request):
             "profile": profile,
             "form": form,
             "user_posts": user_posts,
-            "saved_posts": saved_posts,
-            "active_tab": active_tab,
-            "tab_posts": tab_posts,
         },
     )
 
@@ -243,12 +230,10 @@ def post_detail(request, pk):
         form = CommentForm()
 
     is_liked = False
-    is_saved = False
     user_collections = []
     collection_ids_containing_post = set()
     if request.user.is_authenticated:
         is_liked = post.liked_by.filter(pk=request.user.pk).exists()
-        is_saved = post.saved_by.filter(pk=request.user.pk).exists()
         user_collections = request.user.collections.all().order_by('name')
         collection_ids_containing_post = set(
             post.in_collections.filter(owner=request.user).values_list('pk', flat=True)
@@ -267,7 +252,6 @@ def post_detail(request, pk):
             'comment_list': comment_list,
             'comment_form': form,
             'is_liked': is_liked,
-            'is_saved': is_saved,
             'user_collections': user_collections,
             'collection_ids_containing_post': collection_ids_containing_post,
             'video_embed_url': video_embed_url,
@@ -291,23 +275,6 @@ def post_like(request, pk):
         is_liked = True
         
     return JsonResponse({'is_liked': is_liked, 'likes_count': post.liked_by.count()})
-
-
-@login_required
-def post_save(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if not post.status and request.user != post.author:
-        raise Http404
-        
-    is_saved = False
-    if post.saved_by.filter(pk=request.user.pk).exists():
-        post.saved_by.remove(request.user)
-        is_saved = False
-    else:
-        post.saved_by.add(request.user)
-        is_saved = True
-        
-    return JsonResponse({'is_saved': is_saved})
 
 
 @login_required

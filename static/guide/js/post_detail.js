@@ -29,30 +29,4 @@ $(document).ready(function() {
         });
     });
 
-    $('#ajax-save-btn').click(function(e) {
-        e.preventDefault();
-        var btn = $(this);
-        var url = btn.data('url');
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: { csrfmiddlewaretoken: csrftoken },
-            dataType: 'json',
-            success: function(data) {
-                if (data.is_saved) {
-                    btn.removeClass('btn-outline-secondary').addClass('btn-secondary shadow-sm');
-                    btn.text('Saved');
-                    btn.attr('aria-label', 'Saved');
-                } else {
-                    btn.removeClass('btn-secondary shadow-sm').addClass('btn-outline-secondary');
-                    btn.text('Save');
-                    btn.attr('aria-label', 'Save this post');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log('Save error:', status, error);
-            }
-        });
-    });
 });

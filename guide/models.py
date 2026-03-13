@@ -66,16 +66,7 @@ class Post(models.Model):
         related_name="posts",
     )
 
-    liked_by = models.ManyToManyField(
-        User,
-        related_name="liked_posts",
-        blank=True,
-    )
-    saved_by = models.ManyToManyField(
-        User,
-        related_name="saved_posts",
-        blank=True,
-    )
+    liked_by = models.ManyToManyField(User, related_name="liked_posts", blank=True)
     tags = models.ManyToManyField(
         Tag,
         related_name="posts",
@@ -83,7 +74,7 @@ class Post(models.Model):
     )
     class Meta:
         ordering = ['-created_at']
-        
+
     def __str__(self) -> str:
         return self.title
     
