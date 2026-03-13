@@ -2,17 +2,25 @@
 {% block title %}{{ collection.name }} – Glasgow Survival Guide{% endblock %}
 {% block content %}
 <h1>{{ collection.name }}</h1>
-<p><a href="{% url 'guide:collection_list' %}">Back to collections</a></p>
+<p>
+  {% if request.user == collection.owner %}
+    <a href="{% url 'guide:collection_list' %}">Back to collections</a>
+  {% else %}
+    <a href="{% url 'guide:post_list' %}">Back to posts</a>
+  {% endif %}
+</p>
 {% if posts_in_collection %}
 <ul>
   {% for post in posts_in_collection %}
   <li>
     <a href="{% url 'guide:post_detail' pk=post.pk %}">{{ post.title }}</a>
+    {% if request.user == collection.owner %}
     <form method="post" action="{% url 'guide:collection_remove' collection_pk=collection.pk post_pk=post.pk %}" style="display: inline;">
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ request.get_full_path }}">
       <button type="submit">Remove from list</button>
     </form>
+    {% endif %}
   </li>
   {% endfor %}
 </ul>

@@ -304,7 +304,8 @@ def collection_create(request):
 def collection_detail(request, pk):
     collection = get_object_or_404(CollectionList, pk=pk)
     if collection.owner != request.user:
-        raise Http404
+        if not collection.status:
+            raise Http404
     posts_in_collection = collection.posts.all().order_by('-created_at')
     return render(
         request,

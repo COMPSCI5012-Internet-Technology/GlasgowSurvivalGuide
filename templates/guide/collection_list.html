@@ -8,6 +8,7 @@
   {% for col in collections %}
   <li>
     <a href="{% url 'guide:collection_detail' pk=col.pk %}">{{ col.name }}</a>
+    <span class="text-muted small">{% if col.status %}Public{% else %}Private{% endif %}</span>
     <form method="post" action="{% url 'guide:collection_delete' pk=col.pk %}" style="display: inline;">
       {% csrf_token %}
       <button type="submit">Delete</button>
