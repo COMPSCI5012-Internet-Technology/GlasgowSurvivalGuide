@@ -13,8 +13,21 @@
 
     <h1 class="display-5 fw-bold text-dark mb-2">{{ post.title }}</h1>
     
-    <div class="text-secondary small mb-4">
-        By <span class="fw-bold text-primary">{{ post.author.username }}</span> · {{ post.created_at|date:"d/m/Y H:i" }}
+    <div class="text-secondary small mb-4 d-flex align-items-center flex-wrap gap-2">
+        <span>By</span>
+        {% if user.is_authenticated and user == post.author %}
+        <a href="{% url 'guide:profile' %}" class="d-flex align-items-center gap-2 text-decoration-none text-primary fw-bold">
+        {% else %}
+        <a href="{% url 'guide:user_public_collections' post.author.pk %}" class="d-flex align-items-center gap-2 text-decoration-none text-primary fw-bold">
+        {% endif %}
+            {% if post.author.profile.icon %}
+            <img src="{{ post.author.profile.icon.url }}" alt="{{ post.author.username }} profile picture" class="rounded-circle" style="width: 28px; height: 28px; object-fit: cover;">
+            {% else %}
+            <span class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 0.8rem;">{% if post.author.username %}{{ post.author.username|slice:":1"|upper }}{% else %}?{% endif %}</span>
+            {% endif %}
+            <span>{{ post.author.username }}</span>
+        </a>
+        <span>· {{ post.created_at|date:"d/m/Y H:i" }}</span>
         <span class="ms-3">Rating: <span class="text-warning">★</span> {{ post.rating }}/5</span>
     </div>
 

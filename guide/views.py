@@ -1,9 +1,8 @@
-from django.contrib.auth import login,logout
+from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.shortcuts import render, redirect  
 from guide.forms import CommentForm, EmailLoginForm, PostForm, RegisterForm, UserProfileForm
 from guide.models import Category, CollectionList, News, Post, UserProfile
 from django.http import JsonResponse
@@ -17,6 +16,9 @@ from guide.forms import (
     UserProfileForm,
 )
 from guide.utils import get_video_embed
+
+User = get_user_model()
+
 
 def index(request):
    return redirect('guide:post_list')
@@ -135,11 +137,20 @@ def post_list(request):
             'name': sub_cat  
         })
     recent_news = News.objects.all().order_by('-time')[:5]
+    author_ids = list(set(post_list_qs.values_list('author_id', flat=True)))
+    author_profiles = {
+        p.user_id: p
+        for p in UserProfile.objects.filter(user_id__in=author_ids)
+    }
+    post_list_with_profiles = [
+        (post, author_profiles.get(post.author_id))
+        for post in post_list_qs
+    ]
     return render(
         request,
         'guide/post_list.html',
         {
-            'post_list': post_list_qs,
+            'post_list_with_profiles': post_list_with_profiles,
             'q': q,
             'categories': categories,
             'category_id': category_id,
@@ -189,7 +200,9 @@ def post_create(request):
 
 
 def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(
+        Post.objects.select_related("author__profile"), pk=pk
+    )
     if not post.status and (
         not request.user.is_authenticated or request.user != post.author
     ):
@@ -311,6 +324,21 @@ def collection_detail(request, pk):
         request,
         'guide/collection_detail.html',
         {'collection': collection, 'posts_in_collection': posts_in_collection},
+    )
+
+
+@login_required
+def user_public_collections(request, user_id):
+    target_user = get_object_or_404(
+        User.objects.select_related("profile"), pk=user_id
+    )
+    public_collections = CollectionList.objects.filter(
+        owner_id=user_id, status=True
+    ).order_by('name')
+    return render(
+        request,
+        'guide/user_public_collections.html',
+        {'target_user': target_user, 'public_collections': public_collections},
     )
 
 

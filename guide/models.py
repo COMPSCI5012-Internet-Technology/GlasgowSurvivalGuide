@@ -11,9 +11,9 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
         related_name="profile",
     )
-    academic_year = models.CharField(max_length=20)
-    department = models.CharField(max_length=20)
-    email = models.EmailField(max_length=120)
+    academic_year = models.CharField(max_length=20, blank=True, default="")
+    department = models.CharField(max_length=20, blank=True, default="")
+    email = models.EmailField(max_length=120, blank=True, default="")
     icon = models.ImageField(
         upload_to="profile_icons/",
         blank=True,

@@ -50,6 +50,15 @@ class RegisterForm(forms.Form):
             email=email,
             password=password,
         )
+        if commit:
+            UserProfile.objects.get_or_create(
+                user=user,
+                defaults={
+                    "academic_year": "",
+                    "department": "",
+                    "email": email,
+                },
+            )
         return user
 
 

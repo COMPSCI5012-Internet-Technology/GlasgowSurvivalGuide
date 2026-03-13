@@ -69,7 +69,7 @@
             </div>
 
             <div class="col-md-6 border-start border-end px-4">
-                {% for post in post_list %}
+                {% for post, author_profile in post_list_with_profiles %}
                     <div class="card mb-5 border-0 shadow-sm rounded-3 overflow-hidden mx-auto post-card-list">
                         
                         {% if post.image %}
@@ -96,8 +96,19 @@
                             </p>
 
                             <div class="pt-3 border-top d-flex flex-wrap justify-content-between align-items-center">
-                                <div class="text-muted small">
-                                    <i class="bi bi-person"></i> <strong>Author:</strong> {{ post.author.username|truncatechars:15 }}
+                                <div class="text-muted small d-flex align-items-center gap-2">
+                                    {% if user.is_authenticated and user == post.author %}
+                                    <a href="{% url 'guide:profile' %}" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
+                                    {% else %}
+                                    <a href="{% url 'guide:user_public_collections' post.author.pk %}" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
+                                    {% endif %}
+                                        {% if author_profile and author_profile.icon %}
+                                        <img src="{{ author_profile.icon.url }}" alt="{{ post.author.username }} profile picture" class="rounded-circle" style="width: 24px; height: 24px; object-fit: cover;">
+                                        {% else %}
+                                        <span class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.75rem;">{% if post.author.username %}{{ post.author.username|slice:":1"|upper }}{% else %}?{% endif %}</span>
+                                        {% endif %}
+                                        <span class="fw-bold">{{ post.author.username|truncatechars:15 }}</span>
+                                    </a>
                                 </div>
                                 <div class="text-muted small">
                                     <i class="bi bi-calendar"></i> <strong>Posted:</strong> {{ post.created_at|date:"d M Y" }}
