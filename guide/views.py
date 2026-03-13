@@ -83,12 +83,31 @@ def profile_view(request):
             return redirect("guide:profile")
     else:
         form = UserProfileForm(instance=profile)
+
+    user_posts = Post.objects.filter(author=request.user).select_related(
+        "author__profile", "category"
+    ).order_by("-created_at")
+    saved_posts = request.user.saved_posts.all().select_related(
+        "author__profile", "category"
+    ).order_by("-created_at")
+
+    active_tab = (request.GET.get("tab") or "posts").strip()
+    if active_tab == "saved":
+        tab_posts = saved_posts
+    else:
+        active_tab = "posts"
+        tab_posts = user_posts
+
     return render(
         request,
         "guide/profile.html",
         {
             "profile": profile,
             "form": form,
+            "user_posts": user_posts,
+            "saved_posts": saved_posts,
+            "active_tab": active_tab,
+            "tab_posts": tab_posts,
         },
     )
 

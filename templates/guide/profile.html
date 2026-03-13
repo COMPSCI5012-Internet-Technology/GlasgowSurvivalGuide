@@ -94,6 +94,49 @@
         </form>
       </div>
     </div>
+
+    <hr class="my-4">
+
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+      <h2 class="h5 fw-bold mb-0">Your content</h2>
+      <a href="{% url 'guide:collection_list' %}" class="btn btn-outline-primary btn-sm">My collections</a>
+    </div>
+    <ul class="nav nav-tabs border-bottom mb-3" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a class="nav-link {% if active_tab == 'posts' %}active fw-bold{% endif %}" href="{% url 'guide:profile' %}?tab=posts" {% if active_tab == 'posts' %}aria-current="page"{% endif %}>Your Posts</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link {% if active_tab == 'saved' %}active fw-bold{% endif %}" href="{% url 'guide:profile' %}?tab=saved" {% if active_tab == 'saved' %}aria-current="page"{% endif %}>Saved</a>
+      </li>
+    </ul>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+      {% for post in tab_posts %}
+      <div class="col">
+        <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+          {% if post.image %}
+          <a href="{% url 'guide:post_detail' post.pk %}">
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.image_description|default:post.title }}" style="height: 160px; object-fit: cover;">
+          </a>
+          {% endif %}
+          <div class="card-body">
+            {% if post.category %}
+            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary mb-2">{{ post.category.name }}</span>
+            {% endif %}
+            <h3 class="h6 card-title fw-bold">
+              <a href="{% url 'guide:post_detail' post.pk %}" class="text-decoration-none text-dark">{{ post.title }}</a>
+            </h3>
+            <p class="card-text small text-secondary mb-2">{{ post.description|truncatewords:15 }}</p>
+            <div class="small text-muted">{{ post.created_at|date:"d M Y" }}</div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <p class="text-muted mb-0">No posts in this tab.</p>
+      </div>
+      {% endfor %}
+    </div>
   </div>
 </section>
 {% endblock %}
