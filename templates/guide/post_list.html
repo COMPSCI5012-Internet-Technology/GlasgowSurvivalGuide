@@ -103,9 +103,9 @@
                                     <a href="{% url 'guide:user_public_collections' post.author.pk %}" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
                                     {% endif %}
                                         {% if author_profile and author_profile.icon %}
-                                        <img src="{{ author_profile.icon.url }}" alt="{{ post.author.username }} profile picture" class="rounded-circle" style="width: 24px; height: 24px; object-fit: cover;">
+                                        <img src="{{ author_profile.icon.url }}" alt="{{ post.author.username }} profile picture" class="rounded-circle post-author-avatar">
                                         {% else %}
-                                        <span class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.75rem;">{% if post.author.username %}{{ post.author.username|slice:":1"|upper }}{% else %}?{% endif %}</span>
+                                        <span class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center post-author-avatar-placeholder">
                                         {% endif %}
                                         <span class="fw-bold">{{ post.author.username|truncatechars:15 }}</span>
                                     </a>

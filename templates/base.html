@@ -36,11 +36,9 @@
                         {% if user_profile and user_profile.icon %}
                             <img src="{{ user_profile.icon.url }}"
                                  alt="{{ user.username }} profile picture"
-                                 class="rounded-circle"
-                                 style="width: 32px; height: 32px; object-fit: cover;">
+                                 class="rounded-circle navbar-avatar">
                         {% else %}
-                            <span class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center"
-                                  style="width: 32px; height: 32px;">
+                            <span class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center navbar-avatar-placeholder">
                                 {{ user.username|first|upper }}
                             </span>
                         {% endif %}

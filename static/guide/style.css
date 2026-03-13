@@ -204,3 +204,55 @@ a:focus, button:focus, input:focus, select:focus, textarea:focus {
     font-size: 12px;
     color: #6b7280;
 }
+
+/* ===== Profile Page ===== */
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    font-size: 2rem;
+}
+
+.profile-upload-input {
+    font-size: 12px;
+}
+
+.profile-upload-btn {
+    font-size: 12px;
+}
+
+/* Navbar avatar */
+.navbar-avatar {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+
+.navbar-avatar-placeholder {
+    width: 32px;
+    height: 32px;
+}
+
+/* Post list author avatar */
+.post-author-avatar {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+}
+
+.post-author-avatar-placeholder {
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
+}
+
+/* Profile page container */
+.profile-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}

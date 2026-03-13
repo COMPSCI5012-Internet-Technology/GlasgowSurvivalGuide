@@ -12,7 +12,7 @@ class UserProfile(models.Model):
         related_name="profile",
     )
     academic_year = models.CharField(max_length=20, blank=True, default="")
-    department = models.CharField(max_length=20, blank=True, default="")
+    department = models.CharField(max_length=50, blank=True, default="")
     email = models.EmailField(max_length=120, blank=True, default="")
     icon = models.ImageField(
         upload_to="profile_icons/",

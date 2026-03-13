@@ -3,141 +3,133 @@
 {% block title %}Profile – Glasgow Survival Guide{% endblock %}
 
 {% block content %}
-<section class="container my-4">
-  <div class="bg-white bg-opacity-75 rounded-3 shadow p-4">
-    <div class="row align-items-center mb-4">
-      <div class="col-md-4 text-center">
+<section class="container-Fluid my-4 px-4">
+  <div class="bg-white bg-opacity-75 rounded-3 shadow p-4 profile-container">
+
+    <!-- user info header -->
+    <div class="row mb-4">
+      <!-- left: avatar + upload -->
+      <div class="col-md-3 text-center">
         {% if profile.icon %}
-          <img src="{{ profile.icon.url }}" alt="{{ profile.user.username }} profile picture"
-               class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+          <img src="{{ profile.icon.url }}"
+               alt="{{ profile.user.username }} profile picture"
+               class="rounded-circle mb-2 profile-avatar">
         {% else %}
-          <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white"
-               style="width: 120px; height: 120px;">
-            <span class="fs-2">{{ profile.user.username|first|upper }}</span>
+          <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white mb-2 profile-avatar-placeholder">
+            <span>{{ profile.user.username|first|upper }}</span>
           </div>
         {% endif %}
+
+        <form method="post" enctype="multipart/form-data" class="mt-1">
+          {% csrf_token %}
+          <input type="file" name="icon" id="id_icon"
+                 class="form-control form-control-sm profile-upload-input"
+                 accept="image/*">
+          <button type="submit"
+                  class="btn btn-sm btn-outline-secondary mt-1 w-100 profile-upload-btn">
+            Update picture
+          </button>
+        </form>
       </div>
-      <div class="col-md-8">
-        <h1 class="h3 mb-2">
-          {{ profile.user.username }}
-        </h1>
-        {% if profile.academic_year %}
-          <p class="mb-1 text-muted">Academic year: {{ profile.academic_year }}</p>
-        {% endif %}
+
+      <!-- right: name, department, email -->
+      <div class="col-md-9">
+        <h1 class="h3 fw-bold">{{ profile.user.username }}</h1>
+
         {% if profile.department %}
-          <p class="mb-1 text-muted">Department: {{ profile.department }}</p>
+          <p class="mb-1 text-muted">{{ profile.department }}</p>
         {% endif %}
+
+        {% if profile.academic_year %}
+          <p class="mb-1 text-muted">Class of {{ profile.academic_year }}</p>
+        {% endif %}
+
         {% if profile.email %}
-          <p class="mb-0 text-muted">Email: {{ profile.email }}</p>
+          <p class="mb-1 text-muted">{{ profile.email }}</p>
         {% else %}
-          <p class="mb-0 text-muted">Email: {{ profile.user.email }}</p>
+          <p class="mb-1 text-muted">{{ profile.user.email }}</p>
         {% endif %}
       </div>
     </div>
 
     <hr>
 
-    <div class="row">
-      <div class="col-md-6">
-        <h2 class="h5 mb-3">Edit profile</h2>
-        <form method="post" enctype="multipart/form-data" novalidate>
-          {% csrf_token %}
-          {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-              {{ form.non_field_errors }}
-            </div>
-          {% endif %}
+    <!-- edit profile form -->
+    <h2 class="h5 mb-3">Edit profile</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
 
-          <div class="mb-3">
-            <label for="{{ form.academic_year.id_for_label }}" class="form-label">Academic year</label>
-            {{ form.academic_year }}
-            {% if form.academic_year.errors %}
-              <div class="text-danger small">
-                {{ form.academic_year.errors }}
-              </div>
-            {% endif %}
-          </div>
-
-          <div class="mb-3">
-            <label for="{{ form.department.id_for_label }}" class="form-label">Department</label>
-            {{ form.department }}
-            {% if form.department.errors %}
-              <div class="text-danger small">
-                {{ form.department.errors }}
-              </div>
-            {% endif %}
-          </div>
-
-          <div class="mb-3">
-            <label for="{{ form.email.id_for_label }}" class="form-label">Contact email</label>
-            {{ form.email }}
-            {% if form.email.errors %}
-              <div class="text-danger small">
-                {{ form.email.errors }}
-              </div>
-            {% endif %}
-          </div>
-
-          <div class="mb-3">
-            <label for="{{ form.icon.id_for_label }}" class="form-label">Profile picture</label>
-            {{ form.icon }}
-            {% if form.icon.errors %}
-              <div class="text-danger small">
-                {{ form.icon.errors }}
-              </div>
-            {% endif %}
-          </div>
-
-          <button type="submit" class="btn btn-primary">
-            Save profile
-          </button>
-        </form>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="{{ form.academic_year.id_for_label }}" class="form-label">Academic year</label>
+          {{ form.academic_year }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="{{ form.department.id_for_label }}" class="form-label">Department</label>
+          {{ form.department }}
+        </div>
       </div>
-    </div>
+
+      <div class="mb-3">
+        <label for="{{ form.email.id_for_label }}" class="form-label">Contact email</label>
+        {{ form.email }}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save profile</button>
+    </form>
 
     <hr class="my-4">
 
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-      <h2 class="h5 fw-bold mb-0">Your content</h2>
-      <a href="{% url 'guide:collection_list' %}" class="btn btn-outline-primary btn-sm">My collections</a>
-    </div>
-    <ul class="nav nav-tabs border-bottom mb-3" role="tablist">
-      <li class="nav-item" role="presentation">
-        <a class="nav-link {% if active_tab == 'posts' %}active fw-bold{% endif %}" href="{% url 'guide:profile' %}?tab=posts" {% if active_tab == 'posts' %}aria-current="page"{% endif %}>Your Posts</a>
+    <!-- your content tabs -->
+    <h2 class="h5 fw-bold mb-3">Your content</h2>
+    <ul class="nav nav-tabs mb-3">
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'posts' %}active fw-bold{% endif %}"
+           href="{% url 'guide:profile' %}?tab=posts">Your Posts</a>
       </li>
-      <li class="nav-item" role="presentation">
-        <a class="nav-link {% if active_tab == 'saved' %}active fw-bold{% endif %}" href="{% url 'guide:profile' %}?tab=saved" {% if active_tab == 'saved' %}aria-current="page"{% endif %}>Saved</a>
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'saved' %}active fw-bold{% endif %}"
+           href="{% url 'guide:profile' %}?tab=saved">Saved</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'guide:collection_list' %}">My Collections</a>
       </li>
     </ul>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    <!-- post grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
       {% for post in tab_posts %}
       <div class="col">
-        <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="card h-100 border shadow-sm">
           {% if post.image %}
           <a href="{% url 'guide:post_detail' post.pk %}">
-            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.image_description|default:post.title }}" style="height: 160px; object-fit: cover;">
+            <img src="{{ post.image.url }}" class="card-img-top"
+                 alt="{{ post.image_description|default:post.title }}">
           </a>
           {% endif %}
-          <div class="card-body">
-            {% if post.category %}
-            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary mb-2">{{ post.category.name }}</span>
-            {% endif %}
-            <h3 class="h6 card-title fw-bold">
-              <a href="{% url 'guide:post_detail' post.pk %}" class="text-decoration-none text-dark">{{ post.title }}</a>
+          <div class="card-body p-2">
+            <h3 class="h6 fw-bold mb-1">
+              <a href="{% url 'guide:post_detail' post.pk %}"
+                 class="text-dark text-decoration-none">
+                {{ post.title|truncatewords:8 }}
+              </a>
             </h3>
-            <p class="card-text small text-secondary mb-2">{{ post.description|truncatewords:15 }}</p>
-            <div class="small text-muted">{{ post.created_at|date:"d M Y" }}</div>
+            <p class="small text-secondary mb-0">
+              {{ post.description|truncatewords:10 }}
+            </p>
           </div>
         </div>
       </div>
       {% empty %}
       <div class="col-12">
-        <p class="text-muted mb-0">No posts in this tab.</p>
+        <p class="text-muted">Nothing here yet.</p>
       </div>
       {% endfor %}
     </div>
+
   </div>
 </section>
 {% endblock %}
-
