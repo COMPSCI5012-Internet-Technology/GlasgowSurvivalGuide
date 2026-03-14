@@ -1,27 +1,53 @@
 {% extends 'base.html' %}
 {% block title %}My Collections – Glasgow Survival Guide{% endblock %}
+
 {% block content %}
-<h1>My Collections</h1>
-<p><a href="{% url 'guide:collection_create' %}">New collection</a></p>
-{% if collections %}
-<ul>
-  {% for col in collections %}
-  <li>
-    <a href="{% url 'guide:collection_detail' pk=col.pk %}">{{ col.name }}</a>
-    <span class="text-muted small">{% if col.status %}Public{% else %}Private{% endif %}</span>
-    <form method="post" action="{% url 'guide:collection_toggle_status' pk=col.pk %}" style="display: inline;">
-      {% csrf_token %}
-      <button type="submit">{% if col.status %}Set to Private{% else %}Set to Public{% endif %}</button>
-    </form>
-    <form method="post" action="{% url 'guide:collection_delete' pk=col.pk %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this collection?');">
-      {% csrf_token %}
-      <button type="submit">Delete</button>
-    </form>
-  </li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>No collections yet.</p>
-{% endif %}
-<p><a href="{% url 'guide:profile' %}">Back to profile</a></p>
+<div class="container my-4">
+  <div class="bg-white bg-opacity-75 rounded-3 shadow p-4 collection-container">
+
+    <h1 class="h4 fw-bold mb-3">My Collections</h1>
+
+    <a href="{% url 'guide:collection_create' %}" class="btn btn-primary btn-sm mb-3">
+      + New collection
+    </a>
+
+    {% if collections %}
+    <ul class="list-group">
+      {% for col in collections %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <a href="{% url 'guide:collection_detail' pk=col.pk %}" class="fw-bold text-decoration-none">
+            {{ col.name }}
+          </a>
+          {% if col.status %}
+            <span class="badge bg-success ms-2">Public</span>
+          {% else %}
+            <span class="badge bg-secondary ms-2">Private</span>
+          {% endif %}
+        </div>
+
+        <div class="d-flex gap-1">
+          <form method="post" action="{% url 'guide:collection_toggle_status' pk=col.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-secondary btn-sm">
+              {% if col.status %}Set Private{% else %}Set Public{% endif %}
+            </button>
+          </form>
+          <form method="post" action="{% url 'guide:collection_delete' pk=col.pk %}"
+                onsubmit="return confirm('Delete this collection?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+          </form>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="text-muted">No collections yet.</p>
+    {% endif %}
+
+    <a href="{% url 'guide:profile' %}" class="d-block mt-3 text-decoration-none">&larr; Back to profile</a>
+
+  </div>
+</div>
 {% endblock %}
