@@ -9,6 +9,9 @@ def user_profile(request: HttpRequest) -> dict:
     profile: Optional[UserProfile] = None
     user = getattr(request, "user", None)
     if user is not None and user.is_authenticated:
-        profile = user.profile
+        try:
+            profile = user.profile
+        except UserProfile.DoesNotExist:
+            profile = None
     return {"user_profile": profile}
 
