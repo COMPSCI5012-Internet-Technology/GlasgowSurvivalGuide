@@ -258,6 +258,24 @@ a:focus, button:focus, input:focus, select:focus, textarea:focus {
 }
 /* Collection pages */
 .collection-container {
-    max-width: 700px;
+    max-width: 1200px;
     margin: 0 auto;
+}
+
+/* post title link underline */
+.post-title-link {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: #1f2937;
+}
+
+.post-title-link:hover {
+    color: #2563eb;
+}
+
+/* comment textarea */
+.comment-textarea {
+    width: 95%;
+    height: 60px;
+    resize: vertical;
 }
