@@ -29,9 +29,11 @@ def news_list(request):
     return render(request, "guide/news_list.html", {"news_list": news_items})
 
 
-@login_required
 def about(request):
-    return HttpResponse("Glasgow Survival Guide – about.")
+    return HttpResponse("""
+    A sharing and information platform designed for students at the University of Glasgow, aimed at helping new and current students quickly become familiar with local life and the academic environment. 
+    Users can browse and publish posts on topics such as accommodation, food, commuting, coursework, and campus resources. Through features like comments, likes, bookmarks, and tags, they can build their own “survival guide.” 
+    """)
 
 
 def register(request):
