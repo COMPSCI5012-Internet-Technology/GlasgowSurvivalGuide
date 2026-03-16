@@ -25,6 +25,9 @@
           <input type="file" name="icon" id="id_icon"
                  class="form-control form-control-sm profile-upload-input"
                  accept="image/*">
+          {% if form.icon.errors %}
+            <div class="text-danger small mt-1">{{ form.icon.errors }}</div>
+          {% endif %}
           <button type="submit"
                   class="btn btn-sm btn-outline-secondary mt-1 w-100 profile-upload-btn">
             Update picture

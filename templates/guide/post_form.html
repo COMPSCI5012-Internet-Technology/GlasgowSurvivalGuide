@@ -28,6 +28,10 @@
                 <div class="border border-2 border-secondary border-opacity-25 rounded-3 p-4 bg-light shadow-sm upload-zone-dashed">
                     <input type="file" name="image" class="form-control form-control-sm mx-auto w-75 mb-3" id="id_image">
 
+                    {% if form.image.errors %}
+                        <div class="text-danger small mt-1">{{ form.image.errors }}</div>
+                    {% endif %}
+
                     <div class="text-start mx-auto w-75">
                         <label for="id_image_description" class="form-label small fw-bold text-dark mb-1">
                             Description (Optional)

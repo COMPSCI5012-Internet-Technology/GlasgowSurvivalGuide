@@ -130,14 +130,25 @@
         {% if user.is_authenticated %}
             <form id="comment_form" method="post" action="{% url 'guide:post_detail' post.pk %}" class="mb-4" enctype="multipart/form-data">
                 {% csrf_token %}
+                {% if comment_form.non_field_errors %}
+                    <div class="alert alert-danger p-2 small mb-3">
+                        {{ comment_form.non_field_errors }}
+                    </div>
+                {% endif %}
                 <div class="mb-3">
                     <label for="id_content" class="form-label">Content:</label>
                     <textarea name="content" id="id_content" class="form-control comment-textarea"
                               placeholder="Write a comment..."></textarea>
+                    {% if comment_form.content.errors %}
+                        <div class="text-danger small mt-1">{{ comment_form.content.errors }}</div>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <label for="id_image" class="form-label">Image:</label>
                     <input type="file" name="image" id="id_image" class="form-control" accept="image/*">
+                    {% if comment_form.image.errors %}
+                        <div class="text-danger small mt-1">{{ comment_form.image.errors }}</div>
+                    {% endif %}
                 </div>
                 <button type="submit" name="comment_form" value="true" class="btn btn-primary btn-sm px-4 fw-bold shadow-sm">
                     Post Comment

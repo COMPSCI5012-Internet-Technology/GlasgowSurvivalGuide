@@ -132,6 +132,12 @@ class PostForm(forms.ModelForm):
             "status": "Public (visible to everyone)",
         }
 
+    def clean_image(self):
+        image = self.cleaned_data.get("image")
+        if image and image.size > 4 * 1024 * 1024:
+            raise forms.ValidationError("Image file size must be 4MB or smaller.")
+        return image
+
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -140,6 +146,12 @@ class CommentForm(forms.ModelForm):
         widgets = {
             "content": forms.Textarea(attrs={"placeholder": "Write a comment...", "rows": 3}),
         }
+
+    def clean_image(self):
+        image = self.cleaned_data.get("image")
+        if image and image.size > 4 * 1024 * 1024:
+            raise forms.ValidationError("Image file size must be 4MB or smaller.")
+        return image
 
 
 class CollectionCreateForm(forms.Form):
@@ -176,3 +188,9 @@ class UserProfileForm(forms.ModelForm):
             "department": forms.TextInput(attrs={"placeholder": "e.g. Information Technology"}),
             "email": forms.EmailInput(attrs={"autocomplete": "email"}),
         }
+
+    def clean_icon(self):
+        icon = self.cleaned_data.get("icon")
+        if icon and icon.size > 4 * 1024 * 1024:
+            raise forms.ValidationError("Profile picture file size must be 4MB or smaller.")
+        return icon
