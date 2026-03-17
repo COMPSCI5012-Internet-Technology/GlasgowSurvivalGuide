@@ -1,5 +1,11 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
+from django.contrib.auth import get_user_model
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
 
 
 User = get_user_model()
@@ -19,6 +25,20 @@ class UserProfile(models.Model):
         blank=True,
         null=True,
     )
+    # compress pictures
+    def save(self, *args, **kwargs):
+        if self.icon:
+            img = Image.open(self.icon)
+            img = img.convert("RGB")
+            img.thumbnail((300, 300))
+            output = BytesIO()
+            img.save(output, format="JPEG", quality=75)
+            output.seek(0)
+            self.icon = InMemoryUploadedFile(
+                output, "ImageField", self.icon.name.split(".")[0] + ".jpg",
+                "image/jpeg", sys.getsizeof(output), None
+            )
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"Profile of {self.user.username}"
@@ -72,6 +92,20 @@ class Post(models.Model):
         related_name="posts",
         blank=True,
     )
+    # compress pictures
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            img = img.convert("RGB")
+            img.thumbnail((1200, 1200))
+            output = BytesIO()
+            img.save(output, format="JPEG", quality=75)
+            output.seek(0)
+            self.image = InMemoryUploadedFile(
+                output, "ImageField", self.image.name.split(".")[0] + ".jpg",
+                "image/jpeg", sys.getsizeof(output), None
+            )
+        super().save(*args, **kwargs)
     class Meta:
         ordering = ['-created_at']
 
@@ -95,6 +129,19 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name="comments",
     )
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            img = img.convert("RGB")
+            img.thumbnail((800, 800))
+            output = BytesIO()
+            img.save(output, format="JPEG", quality=75)
+            output.seek(0)
+            self.image = InMemoryUploadedFile(
+                output, "ImageField", self.image.name.split(".")[0] + ".jpg",
+                "image/jpeg", sys.getsizeof(output), None
+            )
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"Comment on {self.post.title} by {self.author}"
