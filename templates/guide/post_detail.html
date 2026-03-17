@@ -39,7 +39,7 @@
 
     {% if post.image %}
     <div class="text-center mb-4">
-        <img src="{{ post.image.url }}" alt="{{ post.image_description|default:post.title }}" class="img-fluid rounded shadow-sm post-detail-image">
+        <img src="{{ post.image.url }}" alt="{{ post.image_description|default:post.title }}" class="img-fluid rounded shadow-sm post-detail-image"  loading="lazy">
     </div>
     {% endif %}
 
@@ -171,7 +171,7 @@
                         <p class="mb-2 small text-dark">{{ comment.content }}</p>
                         {% if comment.image %}
                             <div class="mt-2">
-                                <img src="{{ comment.image.url }}" alt="Comment image" class="comment-thumbnail">
+                                <img src="{{ comment.image.url }}" alt="Comment image" class="comment-thumbnail"  loading="lazy">
                             </div>
                         {% endif %}
                     </div>

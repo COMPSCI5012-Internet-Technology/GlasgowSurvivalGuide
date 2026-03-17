@@ -105,7 +105,7 @@
           {% if post.image %}
           <a href="{% url 'guide:post_detail' post.pk %}">
             <img src="{{ post.image.url }}" class="card-img-top"
-                 alt="{{ post.image_description|default:post.title }}">
+                 alt="{{ post.image_description|default:post.title }}"  loading="lazy">
           </a>
           {% endif %}
           <div class="card-body p-2">

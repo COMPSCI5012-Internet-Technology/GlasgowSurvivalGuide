@@ -74,7 +74,7 @@
                         
                         {% if post.image %}
                             <div class="post-img-frame">
-                                <img src="{{ post.image.url }}" class="w-100 h-100 post-img-fit" alt="{{ post.image_description|default:post.title }}">
+                                <img src="{{ post.image.url }}" class="w-100 h-100 post-img-fit" alt="{{ post.image_description|default:post.title }}"  loading="lazy">
                             </div>
                         {% endif %}
 
@@ -116,7 +116,7 @@
                                     <a href="{% url 'guide:user_public_collections' post.author.pk %}" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
                                     {% endif %}
                                         {% if author_profile and author_profile.icon %}
-                                        <img src="{{ author_profile.icon.url }}" alt="{{ post.author.username }} profile picture" class="rounded-circle post-author-avatar">
+                                        <img src="{{ author_profile.icon.url }}" alt="{{ post.author.username }} profile picture" class="rounded-circle post-author-avatar"  loading="lazy">
                                         {% else %}
                                         <span class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center post-author-avatar-placeholder">
                                         {% endif %}
