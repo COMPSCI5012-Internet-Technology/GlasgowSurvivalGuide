@@ -135,7 +135,7 @@ class PostForm(forms.ModelForm):
     def clean_image(self):
         image = self.cleaned_data.get("image")
         if image and image.size > 2 * 1024 * 1024:
-            raise forms.ValidationError("Image file size must be 4MB or smaller.")
+            raise forms.ValidationError("Image file size must be 2MB or smaller.")
         return image
 
 
@@ -150,7 +150,7 @@ class CommentForm(forms.ModelForm):
     def clean_image(self):
         image = self.cleaned_data.get("image")
         if image and image.size > 2 * 1024 * 1024:
-            raise forms.ValidationError("Image file size must be 4MB or smaller.")
+            raise forms.ValidationError("Image file size must be 2MB or smaller.")
         return image
 
 
@@ -192,5 +192,5 @@ class UserProfileForm(forms.ModelForm):
     def clean_icon(self):
         icon = self.cleaned_data.get("icon")
         if icon and icon.size > 1 * 1024 * 1024:
-            raise forms.ValidationError("Profile picture file size must be 4MB or smaller.")
+            raise forms.ValidationError("Profile picture file size must be 1MB or smaller.")
         return icon
