@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.db import models
-from django.contrib.auth import get_user_model
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -27,7 +25,7 @@ class UserProfile(models.Model):
     )
     # compress pictures
     def save(self, *args, **kwargs):
-        if self.icon:
+        if self.icon and hasattr(self.icon.file, "content_type"):
             img = Image.open(self.icon)
             img = img.convert("RGB")
             img.thumbnail((300, 300))
@@ -94,7 +92,7 @@ class Post(models.Model):
     )
     # compress pictures
     def save(self, *args, **kwargs):
-        if self.image:
+        if self.image and hasattr(self.image.file, "content_type"):
             img = Image.open(self.image)
             img = img.convert("RGB")
             img.thumbnail((1200, 1200))
@@ -106,6 +104,7 @@ class Post(models.Model):
                 "image/jpeg", sys.getsizeof(output), None
             )
         super().save(*args, **kwargs)
+
     class Meta:
         ordering = ['-created_at']
 
@@ -130,7 +129,7 @@ class Comment(models.Model):
         related_name="comments",
     )
     def save(self, *args, **kwargs):
-        if self.image:
+        if self.image and hasattr(self.image.file, "content_type"):
             img = Image.open(self.image)
             img = img.convert("RGB")
             img.thumbnail((800, 800))
