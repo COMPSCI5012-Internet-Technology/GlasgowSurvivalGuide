@@ -1,0 +1,281 @@
+
+body {
+    background: transparent !important;
+}
+
+/* background image */
+.page-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+}
+/* image covers viewport */
+.page-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* keyboard focus style */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+
+
+.post-content-text {
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: #2d3436;
+}
+
+/* post detail page image */
+.post-detail-image {
+    max-height: 500px;
+}
+
+
+.comment-thumbnail {
+    max-height: 200px;
+    width: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.post-detail-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+}
+
+/* post list */
+.post-list-wrapper {
+    max-width: 1200px;
+}
+
+
+.sort-select-custom {
+    cursor: pointer;
+}
+
+
+.post-card-list {
+    max-width: 650px;
+}
+
+.post-img-frame {
+    height: 300px; 
+    overflow: hidden; 
+    background-color: #f8f9fa;
+}
+
+
+.post-img-fit {
+    object-fit: contain;
+}
+
+
+.post-list-desc {
+    line-height: 1.6;
+}
+
+
+.news-date-text {
+    font-size: 0.75rem;
+}
+
+/* post form */
+.post-form-card {
+    max-width: 800px;
+}
+
+
+.upload-zone-dashed {
+    border-style: dashed !important;
+}
+
+/* Login & Register Container */
+.auth-container {
+    width: 100%;
+    max-width: 480px; 
+    background: #ffffff;
+    border-radius: 8px; 
+    padding: 40px 50px; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); 
+    margin: 80px auto;
+}
+
+
+.auth-tabs {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0; 
+    margin-bottom: 30px;
+}
+
+.auth-tab {
+    flex: 1;
+    text-align: center;
+    padding-bottom: 12px;
+    text-decoration: none;
+    color: #666;    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: -1px; 
+}
+
+.auth-tab.active {
+    color: #333; 
+    font-weight: bold;
+    border-bottom: 2px solid #0d6efd; 
+}
+
+
+.auth-label {
+    display: block;
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.auth-sub-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;    margin-bottom: 10px;
+}
+
+
+.auth-container input[type="text"],
+.auth-container input[type="email"],
+.auth-container input[type="password"] {
+    width: 100% !important;
+    box-sizing: border-box; 
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px; 
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 20px; 
+}
+
+.auth-container input:focus {
+    border-color: #0d6efd; 
+}
+
+/* Forget password */
+.forget-pwd-link {
+    display: block;
+    text-align: right;
+    color: #666;    text-decoration: none;
+    font-size: 0.85rem;
+    margin-top: -10px; 
+    margin-bottom: 25px;
+}
+
+.forget-pwd-link:hover {
+    color: #555;
+}
+
+/* Button */
+.auth-btn-primary {
+    width: 100%;
+    background-color: #0d6efd; 
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.auth-btn-primary:hover {
+    background-color: #0b5ed7;
+}
+
+/* Site footer */
+.site-footer {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* ===== Profile Page ===== */
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    font-size: 2rem;
+}
+
+.profile-upload-input {
+    font-size: 12px;
+}
+
+.profile-upload-btn {
+    font-size: 12px;
+}
+
+/* Navbar avatar */
+.navbar-avatar {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+
+.navbar-avatar-placeholder {
+    width: 32px;
+    height: 32px;
+}
+
+/* Post list author avatar */
+.post-author-avatar {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+}
+
+.post-author-avatar-placeholder {
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
+}
+
+/* Profile page container */
+.profile-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+/* Collection pages */
+.collection-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* post title link underline */
+.post-title-link {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: #1f2937;
+}
+
+.post-title-link:hover {
+    color: #2563eb;
+}
+
+/* comment textarea */
+.comment-textarea {
+    width: 95%;
+    height: 60px;
+    resize: vertical;
+}

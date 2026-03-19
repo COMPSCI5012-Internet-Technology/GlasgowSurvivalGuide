@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'guide/auth_style.css' %}">
+{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <img class="auth-bg" src="{% static 'guide/images/glasgow-bg.jpg' %}" alt="Glasgow University main building under a cloudy sky">
+  <div class="auth-card-wrap">
+    <div class="auth-card">
+      <nav class="auth-tabs" aria-label="Login or Register">
+        {% block auth_tabs %}{% endblock %}
+      </nav>
+      <div class="auth-form">
+        {% block card_content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+  <footer class="auth-footer">
+    <span>© 2026 Glasgow Survival Guide. All rights reserved.</span>
+  </footer>
+</div>
+{% endblock %}

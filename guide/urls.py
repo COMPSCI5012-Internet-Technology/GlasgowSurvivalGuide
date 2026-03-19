@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LogoutView
 from django.urls import path
 from guide import views
 
@@ -6,4 +7,23 @@ app_name = 'guide'
 urlpatterns = [
     path('', views.index, name='index'),
     path('about/', views.about, name='about'),
+    path('news/', views.news_list, name='news_list'),
+    path('accounts/register/', views.register, name='register'),
+    path('accounts/login/', views.login_view, name='login'),
+    path('accounts/logout/', LogoutView.as_view(), name='logout'),
+    path('accounts/profile/', views.profile_view, name='profile'),
+    path('posts/', views.post_list, name='post_list'),
+    path('posts/new/', views.post_create, name='post_create'),
+    path('posts/<int:pk>/like/', views.post_like, name='post_like'),
+    path('posts/<int:pk>/delete/', views.post_delete, name='post_delete'),
+    path('posts/<int:pk>/', views.post_detail, name='post_detail'),
+    path('users/<int:user_id>/collections/', views.user_public_collections, name='user_public_collections'),
+    path('collections/', views.collection_list, name='collection_list'),
+    path('collections/new/', views.collection_create, name='collection_create'),
+    path('collections/<int:collection_pk>/add/<int:post_pk>/', views.collection_add, name='collection_add'),
+    path('collections/<int:collection_pk>/remove/<int:post_pk>/', views.collection_remove, name='collection_remove'),
+    path('collections/<int:pk>/delete/', views.collection_delete, name='collection_delete'),
+    path('collections/<int:pk>/toggle-status/', views.collection_toggle_status, name='collection_toggle_status'),
+    path('collections/<int:pk>/', views.collection_detail, name='collection_detail'),
+    path('logout/', views.user_logout, name='logout'),
 ]

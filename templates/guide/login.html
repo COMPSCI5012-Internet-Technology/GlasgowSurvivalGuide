@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container d-flex justify-content-center">
+    <div class="auth-container">
+        
+        <div class="auth-tabs">
+            <a href="{% url 'guide:login' %}" class="auth-tab active">Login</a>
+            <a href="{% url 'guide:register' %}" class="auth-tab">Register</a>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div>
+                <label class="auth-label">UofG Email</label>
+                <span class="auth-sub-label">Please use your @student.gla.ac.uk address</span>
+                {{ form.email }}
+            </div>
+
+            <div>
+                <label class="auth-label">Password</label>
+                {{ form.password }}
+            </div>
+
+            <a href="#" class="forget-pwd-link">Forget password ?</a>
+
+            <button type="submit" class="auth-btn-primary">
+                Login
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
